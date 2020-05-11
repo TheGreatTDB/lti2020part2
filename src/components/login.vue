@@ -43,10 +43,12 @@ export default {
     },
     loginToken(){
       console.log(this.token)
+      var https = require('https');
       var axiosLogin = this.axios.create({
         headers: {
           'Authorization': 'Bearer ' + this.token
-        }
+        },
+        httpsAgent: new https.Agent({ rejectUnauthorized: false })
       });
 
       axiosLogin.get("/api/v1")
@@ -56,10 +58,12 @@ export default {
     },
     loginFile(){
       console.log(this.file.result)
+      var https = require('https');
       var axiosLogin = this.axios.create({
         headers: {
           'Authorization': 'Bearer ' + this.file.result
-        }
+        },
+        httpsAgent: new https.Agent({ rejectUnauthorized: false })
       });
 
       axiosLogin.get("/api/v1")
@@ -70,6 +74,9 @@ export default {
         console.log(error)
       })
     }
+  },
+  created(){
+
   }
 };
 </script>
