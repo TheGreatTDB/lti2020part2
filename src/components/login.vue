@@ -51,7 +51,7 @@ export default {
 
       axiosLogin.get("/api/v1")
       .then(response => {
-        this.$store.state.resources = response.data;
+        console.log(response.data)
       })
     },
     loginFile(){
@@ -64,7 +64,10 @@ export default {
 
       axiosLogin.get("/api/v1")
       .then(response => {
-        this.$store.state.resources = response.data;
+        console.log(response.data)
+      })
+      .catch(error => {
+        console.log(error)
       })
     }
   }
