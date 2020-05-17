@@ -75,7 +75,7 @@ export default {
       })
 
 
-      const testURL = 'https://192.168.147.10:6443/api/v1';
+      const testURL = 'https://192.168.147.10:6443/api/v1/pods';
       const myInit = {
         method: 'GET',
         mode: 'no-cors',
