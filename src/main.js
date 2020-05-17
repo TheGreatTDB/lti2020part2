@@ -5,6 +5,8 @@ import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 
+import Multiselect from "vue-multiselect";
+
 import axios from "axios";
 import VueAxios from "vue-axios";
 import store from "./store/auth";
@@ -13,6 +15,7 @@ axios.defaults.baseURL = "http://192.168.147.10:8080"; //"http://devstack.local"
 
 Vue.use(BootstrapVue, IconsPlugin);
 Vue.use(VueAxios, axios);
+Vue.component("multiselect", Multiselect);
 
 Vue.config.productionTip = false
 

@@ -74,7 +74,7 @@ export default {
         console.log(error)
       })
 
-
+      /*
       const testURL = 'https://192.168.147.10:6443/api/v1/pods';
       const myInit = {
         method: 'GET',
@@ -96,9 +96,7 @@ export default {
         console.log(response);
       }).catch(function(e){
         console.log(e);
-      });
-
-
+      });*/
     }
   },
   created(){

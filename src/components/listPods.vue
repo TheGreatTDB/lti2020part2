@@ -1,25 +1,28 @@
 <template>
   <div>
     <table class="table table-striped">
-      <br />
       <tr>
-        <th>Instances:</th>
+        <th>Pods: </th>
       </tr>
     </table>
-    <b-table v-if="this.pods != null" class="table table-striped">
+    <table class="table table-striped">
       <thead>
         <tr>
-          <th>ID</th>
           <th>Name</th>
+          <th>NameSpace</th>
+          <th>Containers</th>
+          <th>Status</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="pod in pods" :key="pod.id">
-          <td>{{ pod.id }}</td>
-          <td>{{ pod.name }}</td>
+        <tr v-for="pod in pods" :key="pod.metadata.name">
+          <td>{{ pod.metadata.name }}</td>
+          <td>{{ pod.metadata.uid }}</td>
+          <td>{{ pod.spec.containers.length }}</td>
+          <td>{{ pod.status.phase }}</td>
         </tr>
       </tbody>
-    </b-table>
+    </table>
   </div>
 </template>
 <script>
@@ -28,10 +31,11 @@ export default {
   data: function() {
     return {
       pods: null
+
     };
   },
   methods: {
-    loadInstances: function() {
+    loadPods: function() {
       var axiosPods = this.axios.create({
         headers: {
           "Content-Type": "application/json",
@@ -44,6 +48,7 @@ export default {
         .get("/api/v1/pods")
         .then(response => {
           this.pods = response.data.items;
+          console.log(this.pods)
         })
         .catch(error => {
           console.log("Failed to load Pods:");
@@ -52,7 +57,7 @@ export default {
     }
   },
   created() {
-    this.loadInstances();
+    this.loadPods();
   }
 };
 </script>

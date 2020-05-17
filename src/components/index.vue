@@ -1,7 +1,5 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-
     <login v-if="this.$store.state.token != null"/>
     <div v-if="this.$store.state.token == null">
       <menuNav/>
@@ -13,6 +11,8 @@
       <listNodes v-if="this.$store.state.currentTab == 'listNodes'"/>
       <createNode v-if="this.$store.state.currentTab == 'createNode'"/> -->
 
+      <listNodes v-if="this.$store.state.currentTab == 'listNodes'"/>
+
       <listPodes v-if="this.$store.state.currentTab == 'listPods'"/>
       <createPod v-if="this.$store.state.currentTab == 'createPod'"/>
     </div>
@@ -22,6 +22,8 @@
 <script>
 import LoginComponent from "./login";
 import MenuNavComponent from "./menuNav";
+
+import ListNodesComponent from "./listNodes";
 
 import ListPodsComponent from "./listPods";
 import CreatePodComponent from "./createPod";
@@ -35,6 +37,8 @@ export default {
   components: {
     login: LoginComponent,
     menuNav: MenuNavComponent,
+
+    listNodes: ListNodesComponent,
 
     listPodes: ListPodsComponent,
     createPod: CreatePodComponent
