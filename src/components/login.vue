@@ -43,12 +43,11 @@ export default {
     },
     loginToken(){
       console.log(this.token)
-      var https = require('https');
+
       var axiosLogin = this.axios.create({
         headers: {
           'Authorization': 'Bearer ' + this.token
-        },
-        httpsAgent: new https.Agent({ rejectUnauthorized: false })
+        }
       });
 
       axiosLogin.get("/api/v1")
@@ -57,22 +56,49 @@ export default {
       })
     },
     loginFile(){
+      const https = require('https');
       console.log(this.file.result)
-      var https = require('https');
       var axiosLogin = this.axios.create({
+        mode: 'no-cors',
+        httpsAgent: new https.Agent({rejectUnauthorized: false, }),
         headers: {
-          'Authorization': 'Bearer ' + this.file.result
-        },
-        httpsAgent: new https.Agent({ rejectUnauthorized: false })
+          'Authorization': 'Bearer ' + this.file.result,
+        }
       });
 
-      axiosLogin.get("/api/v1")
+      axiosLogin.get("/api/v1",{httpsAgent: new https.Agent({rejectUnauthorized: false, })})
       .then(response => {
         console.log(response.data)
       })
       .catch(error => {
         console.log(error)
       })
+
+
+      const testURL = 'https://192.168.147.10:6443/api/v1';
+      const myInit = {
+        method: 'GET',
+        mode: 'no-cors',
+        headers: {
+          'Authorization': 'Bearer ' + this.file.result,
+        }
+      };
+
+      const agent = new https.Agent({
+        rejectUnauthorized: false
+      })
+
+      const myRequest = new Request(testURL, myInit);
+
+      fetch(myRequest, {agent}).then(function(response) {
+        return response;
+      }).then(function(response) {
+        console.log(response);
+      }).catch(function(e){
+        console.log(e);
+      });
+
+
     }
   },
   created(){

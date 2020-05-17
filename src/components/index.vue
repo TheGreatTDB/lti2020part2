@@ -1,12 +1,29 @@
 <template>
   <div class="hello">
+    <menuNav/>
+    <br/>
+    <br/>
+
     <h1>{{ msg }}</h1>
-    <login/>
+
+    <login v-if="this.$store.state.token == null"/>
+    <div v-if="this.$store.state.token != null">
+      <statusEndpoints v-if="this.$store.state.currentTab == 'statusEndpoints'"/>
+
+      <listNodes v-if="this.$store.state.currentTab == 'listNodes'"/>
+      <createNode v-if="this.$store.state.currentTab == 'createNode'"/>
+
+      <listPodes v-if="this.$store.state.currentTab == 'listPods'"/>
+      <createPod v-if="this.$store.state.currentTab == 'createPod'"/>
+    </div>
   </div>
 </template>
 
 <script>
 import LoginComponent from "./login";
+import MenuNavComponent from "./menuNav";
+
+
 export default {
   name: 'HelloWorld',
   props: {
@@ -14,6 +31,7 @@ export default {
   },
   components: {
     login: LoginComponent,
+    menuNav: MenuNavComponent
   }
 }
 </script>
