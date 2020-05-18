@@ -55,40 +55,43 @@ export default {
   },
   methods: {
     createVolume: function() {
-      var axiosCreateInstance = this.axios.create({
+      var axiosCreatePod = this.axios.create({
         headers: {
-          "x-auth-token": this.$store.state.token,
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Accept": "*/*",
+          //"x-auth-token": 'Bearer ' + this.$store.state.token
         }
       });
 
       // this.teste();
 
-      axiosCreateInstance
-        .post("/volume/v3/" + this.$store.state.currentProject + "/volumes", {
-          kind: "Pod",
-          apiVersion: "v1",
-          metadata:{
-              name: this.podName,
-              namespace: this.podNamespace.metadata.name,
-              labels: {
-                  "name": "nginx"
-              }
-          },
-          spec: {
-              containers: [{
-                  name: "nginx",
-                  image: "nginx",
-                  ports: [{"containerPort": 80}],
-                  resources: {
-                      limits: {
-                          memory: "128Mi",
-                          cpu: "500m"
-                      }
-                  }
-              }]
+      axiosCreatePod
+        .post("/api/v1/namespaces/" + this.podNamespace.metadata.name + "/pods/", 
+          {
+            kind: "Pod",
+            apiVersion: "v1",
+            metadata:{
+                name: this.podName,
+                namespace: this.podNamespace.metadata.name,
+                labels: {
+                    "name": "nginx"
+                }
+            },
+            spec: {
+                containers: [{
+                    name: "nginx",
+                    image: "nginx",
+                    ports: [{"containerPort": 80}],
+                    resources: {
+                        limits: {
+                            memory: "128Mi",
+                            cpu: "500m"
+                        }
+                    }
+                }]
+            }
           }
-        })
+        )
         .then(response => {
           console.log(response);
         })
