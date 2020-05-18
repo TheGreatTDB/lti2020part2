@@ -5,16 +5,18 @@
       <menuNav/>
       <br/>
       <br/>
-      
-      <!--<statusEndpoints v-if="this.$store.state.currentTab == 'statusEndpoints'"/>
-
-      <listNodes v-if="this.$store.state.currentTab == 'listNodes'"/>
-      <createNode v-if="this.$store.state.currentTab == 'createNode'"/> -->
 
       <listNodes v-if="this.$store.state.currentTab == 'listNodes'"/>
 
-      <listPodes v-if="this.$store.state.currentTab == 'listPods'"/>
+      <listPods v-if="this.$store.state.currentTab == 'listPods'"/>
+      <listPodProxies v-if="this.$store.state.currentTab == 'listPodProxies'"/>
       <createPod v-if="this.$store.state.currentTab == 'createPod'"/>
+
+      <listSecrets v-if="this.$store.state.currentTab == 'listSecrets'"/>
+
+      <listServices v-if="this.$store.state.currentTab == 'listServices'"/>
+
+      <statusEndpoints v-if="this.$store.state.currentTab == 'statusEndpoints'"/>
     </div>
   </div>
 </template>
@@ -23,10 +25,21 @@
 import LoginComponent from "./login";
 import MenuNavComponent from "./menuNav";
 
-import ListNodesComponent from "./listNodes";
+import ListNodesComponent from "./listNodes"; //Done +/- (David)
 
-import ListPodsComponent from "./listPods";
-import CreatePodComponent from "./createPod";
+import ListPodsComponent from "./listPods"; //Done +/-  (David)
+import ListPodProxiesComponent from "./listPodProxies"; //Not Done (David)
+import CreatePodComponent from "./createPod"; //Done --------/+ (David)
+
+import ListSecretsComponent from "./listSecrets"; //Not Done
+
+import ListServicesComponent from "./listServices"; //Not Done
+
+import StatusEndpointsComponent from "./statusEndpoints"; //Not Done
+
+
+
+
 
 
 export default {
@@ -40,8 +53,15 @@ export default {
 
     listNodes: ListNodesComponent,
 
-    listPodes: ListPodsComponent,
-    createPod: CreatePodComponent
+    listPods: ListPodsComponent,
+    listPodProxies: ListPodProxiesComponent,
+    createPod: CreatePodComponent,
+
+    listSecrets: ListSecretsComponent,
+
+    listServices: ListServicesComponent,
+
+    statusEndpoints: StatusEndpointsComponent
   }
 }
 </script>
