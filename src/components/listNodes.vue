@@ -2,30 +2,43 @@
   <div>
     <table class="table table-striped">
       <tr>
-        <th>Pods: </th>
+        <th>Nodes:</th>
       </tr>
     </table>
     <table class="table table-striped">
       <thead>
         <tr>
           <th>Name</th>
-          <th>NameSpace</th>
+          <th>Status</th>
+          <th>Age</th>
+          <th>Version</th>
           <th>Ip Address</th>
-          <th>podCIDR</th>
-          <th>MaX CPUs</th>
-          <th>Usage CPUs</th>
-          <th>Max Memory</th>
-          <th>Usage Memory</th>
-          <th>Max Pods</th>
-          <th>Usage Pods</th>
+          <th>Roles</th>
+          <th>OS image</th>
+          <th>Kernel version</th>
+          <th>Container Runtime</th>
+          <th>Capacity CPUs</th>
+          <th>Allocatable CPU</th>
+          <th>Capacity Memory</th>
+          <th>Allocatable Memory</th>
+          <th>Capacity Pods</th>
+          <th>Allocatable Pods</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="node in nodes" :key="node.metadata.name">
           <td>{{ node.metadata.name }}</td>
-          <td>{{ node.metadata.uid }}</td>
+          <td>{{ node.status.conditions[3].type}}</td>
+          <!--  POR AQUI UM IF NO STATUS -->
+          <td>{{ node.metadata.creationTimestamp }}</td>
+          <td>{{ node.status.nodeInfo.kubeletVersion }}</td>
           <td>{{ node.status.addresses[0].address }}</td>
-          <td>{{ node.spec.podCIDR }}</td>
+          <td>{{ node.metadata.labels["node-role.kubernetes.io/master"] }}</td>  <!-- SE tiver vazio entao é master-->
+                    <td>{{ node.status.nodeInfo.osImage }}</td>
+
+          <td>{{ node.status.nodeInfo.kernelVersion }}</td>
+
+          <td>{{ node.status.nodeInfo.containerRuntimeVersion }}</td>
           <td>{{ node.status.capacity.cpu }}</td>
           <td>{{ node.status.allocatable.cpu }}</td>
           <td>{{ node.status.capacity.memory }}</td>
@@ -43,7 +56,6 @@ export default {
   data: function() {
     return {
       nodes: null
-
     };
   },
   methods: {
@@ -51,7 +63,7 @@ export default {
       var axiosPods = this.axios.create({
         headers: {
           "Content-Type": "application/json",
-          "Accept": "*/*",
+          Accept: "*/*"
           //"x-auth-token": 'Bearer ' + this.$store.state.token
         }
       });
@@ -60,7 +72,7 @@ export default {
         .get("/api/v1/nodes")
         .then(response => {
           this.nodes = response.data.items;
-          console.log(this.nodes)
+          console.log(this.nodes);
         })
         .catch(error => {
           console.log("Failed to load Pods:");
