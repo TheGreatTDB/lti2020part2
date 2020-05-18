@@ -24,28 +24,23 @@
           
           <b-nav-item-dropdown
             v-if="true"
-            text="Pods"
+            text="Create"
             right
           >
-            <b-dropdown-item v-on:click.prevent="changeTab('listPods')">List Pods</b-dropdown-item>
+            <b-dropdown-item v-on:click.prevent="changeTab('createNamespace')">Create Namespace</b-dropdown-item>
             <b-dropdown-item v-on:click.prevent="changeTab('createPod')">Create Pod</b-dropdown-item>
+            <b-dropdown-item v-on:click.prevent="changeTab('createService')">Create Service</b-dropdown-item>
           </b-nav-item-dropdown>
           
           <b-nav-item-dropdown
             v-if="true"
-            text="Nodes"
+            text="List"
             right
           >
+            <b-dropdown-item v-on:click.prevent="changeTab('listNamespace')">List Namespaces</b-dropdown-item>
             <b-dropdown-item v-on:click.prevent="changeTab('listNodes')">List Nodes</b-dropdown-item>
-          </b-nav-item-dropdown>
-
-          <b-nav-item-dropdown
-            v-if="true"
-            text="Services"
-            right
-          >
+            <b-dropdown-item v-on:click.prevent="changeTab('listPods')">List Pods</b-dropdown-item>
             <b-dropdown-item v-on:click.prevent="changeTab('listServices')">List Services</b-dropdown-item>
-            <b-dropdown-item v-on:click.prevent="changeTab('createService')">Create Service</b-dropdown-item>
           </b-nav-item-dropdown>
 
           <b-nav-item-dropdown
@@ -53,7 +48,7 @@
             text="Status"
             right
           >
-            <b-dropdown-item v-on:click.prevent="changeTab('statusEndpoints')">Endpoints</b-dropdown-item>
+          <b-dropdown-item v-on:click.prevent="changeTab('statusEndpoints')">Endpoints</b-dropdown-item>
           </b-nav-item-dropdown>
 
           <b-button variant="outline-danger" v-on:click.prevent="logout()">Logout</b-button>

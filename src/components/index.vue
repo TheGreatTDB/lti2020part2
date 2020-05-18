@@ -6,6 +6,9 @@
       <br/>
       <br/>
 
+      <listNamespaces v-if="this.$store.state.currentTab == 'listNamespaces'"/>
+      <createNamespace v-if="this.$store.state.currentTab == 'createNamespace'"/>
+
       <listNodes v-if="this.$store.state.currentTab == 'listNodes'"/>
 
       <listPods v-if="this.$store.state.currentTab == 'listPods'"/>
@@ -25,11 +28,14 @@
 import LoginComponent from "./login";
 import MenuNavComponent from "./menuNav";
 
+import ListNamespacesComponent from "./listNamespaces"; //Not Done
+import CreateNamespaceComponent from "./createNamespace"; //Not Done
+
 import ListNodesComponent from "./listNodes"; //Done +/- (David)
 
 import ListPodsComponent from "./listPods"; //Done +/-  (David)
 import ListPodProxiesComponent from "./listPodProxies"; //Not Done (David)
-import CreatePodComponent from "./createPod"; //Done --------/+ (David)
+import CreatePodComponent from "./createPod"; //Done -/+ (David) (CORS PROBLEMS -> POST)
 
 import ListSecretsComponent from "./listSecrets"; //Not Done
 
@@ -50,6 +56,9 @@ export default {
   components: {
     login: LoginComponent,
     menuNav: MenuNavComponent,
+
+    listNamespaces: ListNamespacesComponent,
+    createNamespace: CreateNamespaceComponent,
 
     listNodes: ListNodesComponent,
 

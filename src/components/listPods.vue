@@ -12,6 +12,7 @@
           <th>NameSpace</th>
           <th>Containers</th>
           <th>Status</th>
+          <th>Options</th>
         </tr>
       </thead>
       <tbody>
@@ -20,6 +21,7 @@
           <td>{{ pod.metadata.uid }}</td>
           <td>{{ pod.spec.containers.length }}</td>
           <td>{{ pod.status.phase }}</td>
+          <td><b-button variant="outline-danger" v-on:click.prevent="deletePod(pod)">Delete</b-button></td>
         </tr>
       </tbody>
     </table>
@@ -52,6 +54,25 @@ export default {
         })
         .catch(error => {
           console.log("Failed to load Pods:");
+          console.log(error);
+        });
+    },
+    deletePod: function(selectedPod){
+      var axiosDeletePod = this.axios.create({
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "*/*",
+          //"x-auth-token": 'Bearer ' + this.$store.state.token
+        }
+      });
+
+      axiosDeletePod
+        .delete("/api/v1/namespaces/" + selectedPod.metadata.namespace + "/pods/" + selectedPod.metadata.name)
+        .then(response => {
+          console.log(response.data)
+        })
+        .catch(error => {
+          console.log("Failed to delete selected Pod:");
           console.log(error);
         });
     }
