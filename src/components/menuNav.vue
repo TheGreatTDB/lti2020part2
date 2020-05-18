@@ -37,7 +37,6 @@
             right
           >
             <b-dropdown-item v-on:click.prevent="changeTab('listNodes')">List Nodes</b-dropdown-item>
-            <b-dropdown-item v-on:click.prevent="changeTab('createNode')">Create Node</b-dropdown-item>
           </b-nav-item-dropdown>
 
           <b-nav-item-dropdown
