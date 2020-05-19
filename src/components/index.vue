@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
-    <login v-if="this.$store.state.token != null"/>
-    <div v-if="this.$store.state.token == null">
+    <login v-if="this.$store.state.token == null"/>
+    <div v-if="this.$store.state.token != null">
       <menuNav/>
       <br/>
       <br/>
