@@ -73,6 +73,7 @@ export default {
         .delete("/api/v1/namespaces/" + selectedPod.metadata.namespace + "/pods/" + selectedPod.metadata.name)
         .then(response => {
           console.log(response.data)
+          this.loadPods();
         })
         .catch(error => {
           console.log("Failed to delete selected Pod:");

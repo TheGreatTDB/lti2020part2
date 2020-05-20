@@ -90,6 +90,7 @@ export default {
         )
         .then(response => {
           console.log(response);
+          this.$store.commit("changeTab", "listPods");
         })
         .catch(error => {
           console.log("Failed to create Volume");

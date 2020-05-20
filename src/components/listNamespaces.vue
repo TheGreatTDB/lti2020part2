@@ -1,50 +1,27 @@
 <template>
   <div>
     <table class="table table-striped">
-      <tr>
-        <th>Nodes:</th>
-      </tr>
+        <th>Namespaces:</th>
     </table>
     <table class="table table-striped">
       <thead>
         <tr>
           <th>Name</th>
-          <th>Created At</th>
           <th>Age</th>
-          <th>Version</th>
-          <th>Ip Address</th>
-          <th>Roles</th>
-          <th>OS image</th>
-          <th>Kernel version</th>
-          <th>Container Runtime</th>
-          <th>Capacity CPUs</th>
-          <th>Allocatable CPU</th>
-          <th>Capacity Memory</th>
-          <th>Allocatable Memory</th>
-          <th>Capacity Pods</th>
-          <th>Allocatable Pods</th>
+          <th>Resource Version</th>
+          <th>Manager</th>
+          <th>API Version</th>
+          <th>Status</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="namespace in namespaces" :key="namespace.metadata.name">
           <td>{{ namespace.metadata.name }}</td>
           <td>{{ namespace.metadata.creationTimestamp}}</td>
-          <!--  POR AQUI UM IF NO STATUS -->
-          <td>{{ node.metadata.creationTimestamp }}</td>
-          <td>{{ node.status.nodeInfo.kubeletVersion }}</td>
-          <td>{{ node.status.addresses[0].address }}</td>
-          <td>{{ node.metadata.labels["node-role.kubernetes.io/master"] }}</td>  <!-- SE tiver vazio entao é master-->
-                    <td>{{ node.status.nodeInfo.osImage }}</td>
-
-          <td>{{ node.status.nodeInfo.kernelVersion }}</td>
-
-          <td>{{ node.status.nodeInfo.containerRuntimeVersion }}</td>
-          <td>{{ node.status.capacity.cpu }}</td>
-          <td>{{ node.status.allocatable.cpu }}</td>
-          <td>{{ node.status.capacity.memory }}</td>
-          <td>{{ node.status.allocatable.memory }}</td>
-          <td>{{ node.status.capacity.pods }}</td>
-          <td>{{ node.status.allocatable.pods }}</td>
+          <td>{{ namespace.metadata.resourceVersion }}</td>
+          <td>{{ namespace.metadata.managedFields[0].manager }}</td>
+          <td>{{ namespace.metadata.managedFields[0].apiVersion }}</td>
+          <td>{{ namespace.status.phase }}</td>
         </tr>
       </tbody>
     </table>

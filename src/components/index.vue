@@ -12,7 +12,6 @@
       <listNodes v-if="this.$store.state.currentTab == 'listNodes' && this.$store.state.token != null"/>
 
       <listPods v-if="this.$store.state.currentTab == 'listPods' && this.$store.state.token != null"/>
-      <listPodProxies v-if="this.$store.state.currentTab == 'listPodProxies' && this.$store.state.token != null"/>
       <createPod v-if="this.$store.state.currentTab == 'createPod' && this.$store.state.token != null"/>
 
       <listSecrets v-if="this.$store.state.currentTab == 'listSecrets' && this.$store.state.token != null"/>
@@ -25,17 +24,16 @@
 </template>
 
 <script>
-import LoginComponent from "./login";
+import LoginComponent from "./login"; //Done
 import MenuNavComponent from "./menuNav";
 
-import ListNamespacesComponent from "./listNamespaces"; //Not Done
+import ListNamespacesComponent from "./listNamespaces"; //Done
 import CreateNamespaceComponent from "./createNamespace"; //Not Done
 
 import ListNodesComponent from "./listNodes"; //Done +/- (David)
 
 import ListPodsComponent from "./listPods"; //Done +/-  (David)
-import ListPodProxiesComponent from "./listPodProxies"; //Not Done (David)
-import CreatePodComponent from "./createPod"; //Done -/+ (David) (CORS PROBLEMS -> POST)
+import CreatePodComponent from "./createPod"; //Done -/+ (David) 
 
 import ListSecretsComponent from "./listSecrets"; //Not Done
 
@@ -63,7 +61,6 @@ export default {
     listNodes: ListNodesComponent,
 
     listPods: ListPodsComponent,
-    listPodProxies: ListPodProxiesComponent,
     createPod: CreatePodComponent,
 
     listSecrets: ListSecretsComponent,
