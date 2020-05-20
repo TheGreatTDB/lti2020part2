@@ -12,6 +12,7 @@
           <th>Manager</th>
           <th>API Version</th>
           <th>Status</th>
+          <th>Options</th>
         </tr>
       </thead>
       <tbody>
@@ -22,6 +23,7 @@
           <td>{{ namespace.metadata.managedFields[0].manager }}</td>
           <td>{{ namespace.metadata.managedFields[0].apiVersion }}</td>
           <td>{{ namespace.status.phase }}</td>
+          <td><b-button variant="outline-danger" v-on:click.prevent="deleteNamespace(namespace)">Delete</b-button></td>
         </tr>
       </tbody>
     </table>
@@ -36,14 +38,14 @@ export default {
     };
   },
   methods: {
-    loadNodes: function() {
-      var axiosPods = this.axios.create({
+    loadNamespaces: function() {
+      var axiosNamespaces = this.axios.create({
         headers: {
           "Authorization": 'Bearer ' + this.$store.state.token
         }
       });
 
-      axiosPods
+      axiosNamespaces
         .get("/api/v1/namespaces")
         .then(response => {
           this.namespaces = response.data.items;
@@ -53,10 +55,28 @@ export default {
           console.log("Failed to load Namespaces:");
           console.log(error);
         });
+    },
+    deleteNamespace: function(selectedNamespace){
+      var axiosDeleteNamespace = this.axios.create({
+        headers: {
+          "Authorization": 'Bearer ' + this.$store.state.token
+        }
+      });
+
+      axiosDeleteNamespace
+        .delete("/api/v1/namespaces/" + selectedNamespace.metadata.name)
+        .then(response => {
+          console.log(response.data)
+          this.namespaces.delete(selectedNamespace)
+        })
+        .catch(error => {
+          console.log("Failed to delete selected Namespace");
+          console.log(error);
+        });
     }
   },
   created() {
-    this.loadNodes();
+    this.loadNamespaces();
   }
 };
 </script>
