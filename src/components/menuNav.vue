@@ -29,7 +29,6 @@
           >
             <b-dropdown-item v-on:click.prevent="changeTab('createNamespace')">Create Namespace</b-dropdown-item>
             <b-dropdown-item v-on:click.prevent="changeTab('createPod')">Create Pod</b-dropdown-item>
-            <b-dropdown-item v-on:click.prevent="changeTab('createService')">Create Service</b-dropdown-item>
           </b-nav-item-dropdown>
           
           <b-nav-item-dropdown

@@ -35,11 +35,11 @@ import ListNodesComponent from "./listNodes"; //Done +/-
 import ListPodsComponent from "./listPods"; //Done +/-
 import CreatePodComponent from "./createPod"; //Done -/+ 
 
-import ListSecretsComponent from "./listSecrets"; //Done (Falta o Popup para ver o token)
+import ListSecretsComponent from "./listSecrets"; //Done (Falta o fazer o Popup para ver o token)
 
-import ListServicesComponent from "./listServices"; //Not Done
+import ListServicesComponent from "./listServices"; //Done
 
-import StatusEndpointsComponent from "./statusEndpoints"; //Not Done
+import StatusEndpointsComponent from "./statusEndpoints"; //Done
 
 export default {
   name: 'HelloWorld',
