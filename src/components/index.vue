@@ -28,23 +28,18 @@ import LoginComponent from "./login"; //Done
 import MenuNavComponent from "./menuNav";
 
 import ListNamespacesComponent from "./listNamespaces"; //Done
-import CreateNamespaceComponent from "./createNamespace"; //Not Done
+import CreateNamespaceComponent from "./createNamespace"; //Done
 
-import ListNodesComponent from "./listNodes"; //Done +/- (David)
+import ListNodesComponent from "./listNodes"; //Done +/-
 
-import ListPodsComponent from "./listPods"; //Done +/-  (David)
-import CreatePodComponent from "./createPod"; //Done -/+ (David) 
+import ListPodsComponent from "./listPods"; //Done +/-
+import CreatePodComponent from "./createPod"; //Done -/+ 
 
-import ListSecretsComponent from "./listSecrets"; //Not Done
+import ListSecretsComponent from "./listSecrets"; //Done (Falta o Popup para ver o token)
 
 import ListServicesComponent from "./listServices"; //Not Done
 
 import StatusEndpointsComponent from "./statusEndpoints"; //Not Done
-
-
-
-
-
 
 export default {
   name: 'HelloWorld',
