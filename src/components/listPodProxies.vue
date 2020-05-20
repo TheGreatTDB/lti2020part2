@@ -38,9 +38,7 @@ export default {
     loadPods: function() {
       var axiosPods = this.axios.create({
         headers: {
-          "Content-Type": "application/json",
-          "Accept": "*/*",
-          //"x-auth-token": 'Bearer ' + this.$store.state.token
+          "Authorization": 'Bearer ' + this.$store.state.token
         }
       });
 

@@ -57,13 +57,9 @@ export default {
     createPod: function() {
       var axiosCreatePod = this.axios.create({
         headers: {
-          "Content-Type": "application/json",
-          "Accept": "*/*",
-          //"x-auth-token": 'Bearer ' + this.$store.state.token
+          "Authorization": 'Bearer ' + this.$store.state.token
         }
       });
-
-      // this.teste();
 
       axiosCreatePod
         .post("/api/v1/namespaces/" + this.podNamespace.metadata.name + "/pods/", 
@@ -103,9 +99,7 @@ export default {
     loadNamespaces: function() {
       var axiosNamespaces = this.axios.create({
         headers: {
-          "Content-Type": "application/json",
-          "Accept": "*/*",
-          //"x-auth-token": 'Bearer ' + this.$store.state.token
+          "Authorization": 'Bearer ' + this.$store.state.token
         }
       });
 
@@ -120,40 +114,9 @@ export default {
           console.log(error);
         });
     },
-    loadContainers: function() {
-      var axiosContainers = this.axios.create({
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "*/*",
-          //"x-auth-token": 'Bearer ' + this.$store.state.token
-        }
-      });
-
-      axiosContainers
-        .get("/api/v1/containers")
-        .then(response => {
-          this.containers = response.data.items;
-          console.log(this.containers)
-        })
-        .catch(error => {
-          console.log("Failed to load Namespaces:");
-          console.log(error);
-        });
-    }
-    // teste: function() {
-    //     console.log(this.instanceNetworks)
-
-    //     this.instanceNetworks.forEach(network => {
-    //         let aux = {uuid : network.id}
-    //         this.instanceNetworksUuid.push(aux)
-    //     })
-
-    //     console.log(this.instanceNetworksUuid)
-    // }
   },
   created(){
     this.loadNamespaces();
-    //this.loadContainers();
   }
 };
 </script>

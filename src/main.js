@@ -11,7 +11,7 @@ import axios from "axios";
 import VueAxios from "vue-axios";
 import store from "./store/auth";
 
-axios.defaults.baseURL = "http://192.168.147.10:8080"; //"http://devstack.local"; //Mudar para ip do servidor do openstack! ex: "http://192.168.x.x"
+axios.defaults.baseURL = "http://192.168.199.150:8443"; //"http://devstack.local"; //Mudar para ip do servidor do openstack! ex: "http://192.168.x.x"
 
 Vue.use(BootstrapVue, IconsPlugin);
 Vue.use(VueAxios, axios);

@@ -9,7 +9,7 @@
       <thead>
         <tr>
           <th>Name</th>
-          <th>Status</th>
+          <th>Created At</th>
           <th>Age</th>
           <th>Version</th>
           <th>Ip Address</th>
@@ -26,9 +26,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="node in nodes" :key="node.metadata.name">
-          <td>{{ node.metadata.name }}</td>
-          <td>{{ node.status.conditions[3].type}}</td>
+        <tr v-for="namespace in namespaces" :key="namespace.metadata.name">
+          <td>{{ namespace.metadata.name }}</td>
+          <td>{{ namespace.metadata.creationTimestamp}}</td>
           <!--  POR AQUI UM IF NO STATUS -->
           <td>{{ node.metadata.creationTimestamp }}</td>
           <td>{{ node.status.nodeInfo.kubeletVersion }}</td>
@@ -55,27 +55,25 @@ export default {
   props: [],
   data: function() {
     return {
-      nodes: null
+      namespaces: null
     };
   },
   methods: {
     loadNodes: function() {
       var axiosPods = this.axios.create({
         headers: {
-          "Content-Type": "application/json",
-          Accept: "*/*"
-          //"x-auth-token": 'Bearer ' + this.$store.state.token
+          "Authorization": 'Bearer ' + this.$store.state.token
         }
       });
 
       axiosPods
-        .get("/api/v1/nodes")
+        .get("/api/v1/namespaces")
         .then(response => {
-          this.nodes = response.data.items;
-          console.log(this.nodes);
+          this.namespaces = response.data.items;
+          console.log(this.namespaces);
         })
         .catch(error => {
-          console.log("Failed to load Pods:");
+          console.log("Failed to load Namespaces:");
           console.log(error);
         });
     }

@@ -33,8 +33,13 @@
           <td>{{ node.metadata.creationTimestamp }}</td>
           <td>{{ node.status.nodeInfo.kubeletVersion }}</td>
           <td>{{ node.status.addresses[0].address }}</td>
-          <td>{{ node.metadata.labels["node-role.kubernetes.io/master"] }}</td>  <!-- SE tiver vazio entao é master-->
-                    <td>{{ node.status.nodeInfo.osImage }}</td>
+          
+          <td v-if="node.metadata.labels['node-role.kubernetes.io/master'].length == 0">master</td>
+          <td v-if="node.metadata.labels['node-role.kubernetes.io/master'].length != 0">
+            {{ node.metadata.labels["node-role.kubernetes.io/master"] }}
+          </td>
+
+          <td>{{ node.status.nodeInfo.osImage }}</td>
 
           <td>{{ node.status.nodeInfo.kernelVersion }}</td>
 
@@ -62,9 +67,7 @@ export default {
     loadNodes: function() {
       var axiosPods = this.axios.create({
         headers: {
-          "Content-Type": "application/json",
-          Accept: "*/*"
-          //"x-auth-token": 'Bearer ' + this.$store.state.token
+          "Authorization": 'Bearer ' + this.$store.state.token
         }
       });
 

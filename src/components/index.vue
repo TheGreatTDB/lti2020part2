@@ -1,25 +1,25 @@
 <template>
   <div class="hello">
-    <login v-if="this.$store.state.token != null"/>
-    <div v-if="this.$store.state.token == null">
+    <login v-if="this.$store.state.token == null"/>
+    <div v-if="this.$store.state.token != null">
       <menuNav/>
       <br/>
       <br/>
 
-      <listNamespaces v-if="this.$store.state.currentTab == 'listNamespaces'"/>
-      <createNamespace v-if="this.$store.state.currentTab == 'createNamespace'"/>
+      <listNamespaces v-if="this.$store.state.currentTab == 'listNamespaces' && this.$store.state.token != null"/>
+      <createNamespace v-if="this.$store.state.currentTab == 'createNamespace' && this.$store.state.token != null"/>
 
-      <listNodes v-if="this.$store.state.currentTab == 'listNodes'"/>
+      <listNodes v-if="this.$store.state.currentTab == 'listNodes' && this.$store.state.token != null"/>
 
-      <listPods v-if="this.$store.state.currentTab == 'listPods'"/>
-      <listPodProxies v-if="this.$store.state.currentTab == 'listPodProxies'"/>
-      <createPod v-if="this.$store.state.currentTab == 'createPod'"/>
+      <listPods v-if="this.$store.state.currentTab == 'listPods' && this.$store.state.token != null"/>
+      <listPodProxies v-if="this.$store.state.currentTab == 'listPodProxies' && this.$store.state.token != null"/>
+      <createPod v-if="this.$store.state.currentTab == 'createPod' && this.$store.state.token != null"/>
 
-      <listSecrets v-if="this.$store.state.currentTab == 'listSecrets'"/>
+      <listSecrets v-if="this.$store.state.currentTab == 'listSecrets' && this.$store.state.token != null"/>
 
-      <listServices v-if="this.$store.state.currentTab == 'listServices'"/>
+      <listServices v-if="this.$store.state.currentTab == 'listServices' && this.$store.state.token != null"/>
 
-      <statusEndpoints v-if="this.$store.state.currentTab == 'statusEndpoints'"/>
+      <statusEndpoints v-if="this.$store.state.currentTab == 'statusEndpoints' && this.$store.state.token != null"/>
     </div>
   </div>
 </template>

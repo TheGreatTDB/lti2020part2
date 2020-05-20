@@ -42,61 +42,38 @@ export default {
       this.file.readAsText(txtFile);
     },
     loginToken(){
-      console.log(this.token)
-
       var axiosLogin = this.axios.create({
         headers: {
           'Authorization': 'Bearer ' + this.token
         }
       });
 
-      axiosLogin.get("/api/v1")
+      axiosLogin.get("/api")
       .then(response => {
-        console.log(response.data)
+        console.log(response)
+        this.$store.commit("setToken", this.token);
+      })
+      .catch(error => {
+        console.log("Error Login with Text")
+        console.log(error)
       })
     },
     loginFile(){
-      const https = require('https');
-      console.log(this.file.result)
       var axiosLogin = this.axios.create({
-        mode: 'no-cors',
-        httpsAgent: new https.Agent({rejectUnauthorized: false, }),
         headers: {
           'Authorization': 'Bearer ' + this.file.result,
         }
       });
 
-      axiosLogin.get("/api/v1",{httpsAgent: new https.Agent({rejectUnauthorized: false, })})
+      axiosLogin.get("/api")
       .then(response => {
-        console.log(response.data)
+        console.log(response)
+        this.$store.commit("setToken", this.file.result);
       })
       .catch(error => {
+        console.log("Error Login with File")
         console.log(error)
       })
-
-      /*
-      const testURL = 'https://192.168.147.10:6443/api/v1/pods';
-      const myInit = {
-        method: 'GET',
-        mode: 'no-cors',
-        headers: {
-          'Authorization': 'Bearer ' + this.file.result,
-        }
-      };
-
-      const agent = new https.Agent({
-        rejectUnauthorized: false
-      })
-
-      const myRequest = new Request(testURL, myInit);
-
-      fetch(myRequest, {agent}).then(function(response) {
-        return response;
-      }).then(function(response) {
-        console.log(response);
-      }).catch(function(e){
-        console.log(e);
-      });*/
     }
   },
   created(){
