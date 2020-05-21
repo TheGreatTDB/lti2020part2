@@ -1,50 +1,29 @@
 <template>
   <div>
     <table class="table table-striped">
-      <tr>
-        <th>Nodes:</th>
-      </tr>
+        <th>Namespaces:</th>
     </table>
     <table class="table table-striped">
       <thead>
         <tr>
           <th>Name</th>
-          <th>Status</th>
           <th>Age</th>
-          <th>Version</th>
-          <th>Ip Address</th>
-          <th>Roles</th>
-          <th>OS image</th>
-          <th>Kernel version</th>
-          <th>Container Runtime</th>
-          <th>Capacity CPUs</th>
-          <th>Allocatable CPU</th>
-          <th>Capacity Memory</th>
-          <th>Allocatable Memory</th>
-          <th>Capacity Pods</th>
-          <th>Allocatable Pods</th>
+          <th>Resource Version</th>
+          <th>Manager</th>
+          <th>API Version</th>
+          <th>Status</th>
+          <th>Options</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="node in nodes" :key="node.metadata.name">
-          <td>{{ node.metadata.name }}</td>
-          <td>{{ node.status.conditions[3].type}}</td>
-          <!--  POR AQUI UM IF NO STATUS -->
-          <td>{{ node.metadata.creationTimestamp }}</td>
-          <td>{{ node.status.nodeInfo.kubeletVersion }}</td>
-          <td>{{ node.status.addresses[0].address }}</td>
-          <td>{{ node.metadata.labels["node-role.kubernetes.io/master"] }}</td>  <!-- SE tiver vazio entao é master-->
-                    <td>{{ node.status.nodeInfo.osImage }}</td>
-
-          <td>{{ node.status.nodeInfo.kernelVersion }}</td>
-
-          <td>{{ node.status.nodeInfo.containerRuntimeVersion }}</td>
-          <td>{{ node.status.capacity.cpu }}</td>
-          <td>{{ node.status.allocatable.cpu }}</td>
-          <td>{{ node.status.capacity.memory }}</td>
-          <td>{{ node.status.allocatable.memory }}</td>
-          <td>{{ node.status.capacity.pods }}</td>
-          <td>{{ node.status.allocatable.pods }}</td>
+        <tr v-for="namespace in namespaces" :key="namespace.metadata.name">
+          <td>{{ namespace.metadata.name }}</td>
+          <td>{{ namespace.metadata.creationTimestamp}}</td>
+          <td>{{ namespace.metadata.resourceVersion }}</td>
+          <td>{{ namespace.metadata.managedFields[0].manager }}</td>
+          <td>{{ namespace.metadata.managedFields[0].apiVersion }}</td>
+          <td>{{ namespace.status.phase }}</td>
+          <td><b-button variant="outline-danger" v-on:click.prevent="deleteNamespace(namespace)">Delete</b-button></td>
         </tr>
       </tbody>
     </table>
@@ -55,33 +34,49 @@ export default {
   props: [],
   data: function() {
     return {
-      nodes: null
+      namespaces: null
     };
   },
   methods: {
-    loadNodes: function() {
-      var axiosPods = this.axios.create({
+    loadNamespaces: function() {
+      var axiosNamespaces = this.axios.create({
         headers: {
-          "Content-Type": "application/json",
-          Accept: "*/*"
-          //"x-auth-token": 'Bearer ' + this.$store.state.token
+          "Authorization": 'Bearer ' + this.$store.state.token
         }
       });
 
-      axiosPods
-        .get("/api/v1/nodes")
+      axiosNamespaces
+        .get("/api/v1/namespaces")
         .then(response => {
-          this.nodes = response.data.items;
-          console.log(this.nodes);
+          this.namespaces = response.data.items;
+          console.log(this.namespaces);
         })
         .catch(error => {
-          console.log("Failed to load Pods:");
+          console.log("Failed to load Namespaces:");
+          console.log(error);
+        });
+    },
+    deleteNamespace: function(selectedNamespace){
+      var axiosDeleteNamespace = this.axios.create({
+        headers: {
+          "Authorization": 'Bearer ' + this.$store.state.token
+        }
+      });
+
+      axiosDeleteNamespace
+        .delete("/api/v1/namespaces/" + selectedNamespace.metadata.name)
+        .then(response => {
+          console.log(response.data)
+          this.namespaces.delete(selectedNamespace)
+        })
+        .catch(error => {
+          console.log("Failed to delete selected Namespace");
           console.log(error);
         });
     }
   },
   created() {
-    this.loadNodes();
+    this.loadNamespaces();
   }
 };
 </script>

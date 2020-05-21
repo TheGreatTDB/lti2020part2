@@ -2,7 +2,7 @@
   <div>
     <table class="table table-striped">
       <tr>
-        <th>Pods: </th>
+        <th>Services: </th>
       </tr>
     </table>
     <table class="table table-striped">
@@ -10,28 +10,28 @@
         <tr>
           <th>Name</th>
           <th>NameSpace</th>
-          <th>Ip Address</th>
-          <th>podCIDR</th>
-          <th>MaX CPUs</th>
-          <th>Usage CPUs</th>
-          <th>Max Memory</th>
-          <th>Usage Memory</th>
-          <th>Max Pods</th>
-          <th>Usage Pods</th>
+          <th>Age</th>
+          <th>Component</th>
+          <th>Provider</th>
+          <th>Service Name</th>
+          <th>Protocol</th>
+          <th>Port</th>
+          <th>Target Port</th>
+          <th>Cluster IP</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="node in nodes" :key="node.metadata.name">
-          <td>{{ node.metadata.name }}</td>
-          <td>{{ node.metadata.uid }}</td>
-          <td>{{ node.status.addresses[0].address }}</td>
-          <td>{{ node.spec.podCIDR }}</td>
-          <td>{{ node.status.capacity.cpu }}</td>
-          <td>{{ node.status.allocatable.cpu }}</td>
-          <td>{{ node.status.capacity.memory }}</td>
-          <td>{{ node.status.allocatable.memory }}</td>
-          <td>{{ node.status.capacity.pods }}</td>
-          <td>{{ node.status.allocatable.pods }}</td>
+        <tr v-for="service in services" :key="service.metadata.name">
+          <td>{{ service.metadata.name }}</td>
+          <td>{{ service.metadata.namespace }}</td>
+          <td>{{ service.metadata.creationTimestamp }}</td>
+          <td>{{ service.metadata.labels.component }}</td>
+          <td>{{ service.metadata.labels.provider }}</td>
+          <td>{{ service.spec.ports[0].name }}</td>
+          <td>{{ service.spec.ports[0].protocol }}</td>
+          <td>{{ service.spec.ports[0].port }}</td>
+          <td>{{ service.spec.ports[0].targetPort }}</td>
+          <td>{{ service.spec.clusterIP }}</td>
         </tr>
       </tbody>
     </table>
@@ -42,25 +42,23 @@ export default {
   props: [],
   data: function() {
     return {
-      nodes: null
+      services: null
 
     };
   },
   methods: {
-    loadNodes: function() {
-      var axiosPods = this.axios.create({
+    loadServices: function() {
+      var axiosServices = this.axios.create({
         headers: {
-          "Content-Type": "application/json",
-          "Accept": "*/*",
-          //"x-auth-token": 'Bearer ' + this.$store.state.token
+         "Authorization": 'Bearer ' + this.$store.state.token
         }
       });
 
-      axiosPods
-        .get("/api/v1/nodes")
+      axiosServices
+        .get("/api/v1/services")
         .then(response => {
-          this.nodes = response.data.items;
-          console.log(this.nodes)
+          this.services = response.data.items;
+          console.log(this.services)
         })
         .catch(error => {
           console.log("Failed to load Pods:");
@@ -69,7 +67,7 @@ export default {
     }
   },
   created() {
-    this.loadNodes();
+    this.loadServices();
   }
 };
 </script>

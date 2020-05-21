@@ -11,7 +11,7 @@
           <th>Namespace</th>
           <th>Name</th>
           <th>Containers</th>
-          <th>Status</th>
+          <!--<th>Status</th>-->
           <th>Restarts</th>
           <th>Age</th>
           <th>IP</th>
@@ -25,7 +25,7 @@
           <td>{{ pod.metadata.name }}</td>
           <td>{{ pod.spec.containers.length }}</td>
           <td>{{ pod.status.phase }}</td>
-          <td>{{ pod.status.containerStatuses[0].restartCount }}</td>
+          <!--<td>{{ pod.status.containerStatuses[0].restartCount }}</td>-->
           <td>{{ pod.metadata.creationTimestamp }}</td>
           <td>{{ pod.status.podIP}}</td>
           <td>{{ pod.spec.nodeName}}</td>
@@ -47,9 +47,7 @@ export default {
     loadPods: function() {
       var axiosPods = this.axios.create({
         headers: {
-          "Content-Type": "application/json",
-          Accept: "*/*",
-          "x-auth-token": 'Bearer ' + this.$store.state.token
+          "Authorization": 'Bearer ' + this.$store.state.token
         }
       });
 
@@ -67,9 +65,7 @@ export default {
     deletePod: function(selectedPod){
       var axiosDeletePod = this.axios.create({
         headers: {
-          "Content-Type": "application/json",
-          "Accept": "*/*",
-          //"x-auth-token": 'Bearer ' + this.$store.state.token
+          "Authorization": 'Bearer ' + this.$store.state.token
         }
       });
 
@@ -77,6 +73,7 @@ export default {
         .delete("/api/v1/namespaces/" + selectedPod.metadata.namespace + "/pods/" + selectedPod.metadata.name)
         .then(response => {
           console.log(response.data)
+          this.loadPods();
         })
         .catch(error => {
           console.log("Failed to delete selected Pod:");

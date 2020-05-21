@@ -29,7 +29,6 @@
           >
             <b-dropdown-item v-on:click.prevent="changeTab('createNamespace')">Create Namespace</b-dropdown-item>
             <b-dropdown-item v-on:click.prevent="changeTab('createPod')">Create Pod</b-dropdown-item>
-            <b-dropdown-item v-on:click.prevent="changeTab('createService')">Create Service</b-dropdown-item>
           </b-nav-item-dropdown>
           
           <b-nav-item-dropdown
@@ -37,10 +36,11 @@
             text="List"
             right
           >
-            <b-dropdown-item v-on:click.prevent="changeTab('listNamespace')">List Namespaces</b-dropdown-item>
+            <b-dropdown-item v-on:click.prevent="changeTab('listNamespaces')">List Namespaces</b-dropdown-item>
             <b-dropdown-item v-on:click.prevent="changeTab('listNodes')">List Nodes</b-dropdown-item>
             <b-dropdown-item v-on:click.prevent="changeTab('listPods')">List Pods</b-dropdown-item>
             <b-dropdown-item v-on:click.prevent="changeTab('listServices')">List Services</b-dropdown-item>
+            <b-dropdown-item v-on:click.prevent="changeTab('listSecrets')">List Secrets</b-dropdown-item>
           </b-nav-item-dropdown>
 
           <b-nav-item-dropdown

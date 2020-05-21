@@ -5,6 +5,8 @@ import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 
+import VueSlideoutPanel from 'vue2-slideout-panel';
+
 import Multiselect from "vue-multiselect";
 
 import axios from "axios";
@@ -16,6 +18,7 @@ axios.defaults.baseURL = "http://192.168.199.150:8443"; //"http://devstack.local
 Vue.use(BootstrapVue, IconsPlugin);
 Vue.use(VueAxios, axios);
 Vue.component("multiselect", Multiselect);
+Vue.use(VueSlideoutPanel);
 
 Vue.config.productionTip = false
 

@@ -1,6 +1,7 @@
 <template>
   <div>
     <table class="table table-striped">
+      <slideout-panel></slideout-panel>
       <tr>
         <th>Pods: </th>
       </tr>
@@ -10,28 +11,22 @@
         <tr>
           <th>Name</th>
           <th>NameSpace</th>
-          <th>Ip Address</th>
-          <th>podCIDR</th>
-          <th>MaX CPUs</th>
-          <th>Usage CPUs</th>
-          <th>Max Memory</th>
-          <th>Usage Memory</th>
-          <th>Max Pods</th>
-          <th>Usage Pods</th>
+          <th>Account Name</th>
+          <th>Resource Version</th>
+          <th>Age</th>
+          <th>Type</th>
+          <th>Token</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="node in nodes" :key="node.metadata.name">
-          <td>{{ node.metadata.name }}</td>
-          <td>{{ node.metadata.uid }}</td>
-          <td>{{ node.status.addresses[0].address }}</td>
-          <td>{{ node.spec.podCIDR }}</td>
-          <td>{{ node.status.capacity.cpu }}</td>
-          <td>{{ node.status.allocatable.cpu }}</td>
-          <td>{{ node.status.capacity.memory }}</td>
-          <td>{{ node.status.allocatable.memory }}</td>
-          <td>{{ node.status.capacity.pods }}</td>
-          <td>{{ node.status.allocatable.pods }}</td>
+        <tr v-for="secret in secrets" :key="secret.metadata.name">
+          <td>{{ secret.metadata.name }}</td>
+          <td>{{ secret.metadata.namespace }}</td>
+          <td>{{ secret.metadata.annotations["kubernetes.io/service-account.name"] }}</td>
+          <td>{{ secret.metadata.resourceVersion }}</td>
+          <td>{{ secret.metadata.creationTimestamp }}</td>
+          <td>{{ secret.type }}</td>
+          <td><button class="btn btn-primary" v-on:click.prevent="openPopup(secret.data.token)">See Token</button></td>
         </tr>
       </tbody>
     </table>
@@ -42,34 +37,55 @@ export default {
   props: [],
   data: function() {
     return {
-      nodes: null
-
+      secrets: null,
+      selectedToken: "",
     };
   },
   methods: {
-    loadNodes: function() {
+    loadSecrets: function() {
       var axiosPods = this.axios.create({
         headers: {
-          "Content-Type": "application/json",
-          "Accept": "*/*",
-          //"x-auth-token": 'Bearer ' + this.$store.state.token
+          "Authorization": 'Bearer ' + this.$store.state.token
         }
       });
 
       axiosPods
-        .get("/api/v1/nodes")
+        .get("/api/v1/secrets")
         .then(response => {
-          this.nodes = response.data.items;
-          console.log(this.nodes)
+          this.secrets = response.data.items;
+          console.log(this.secrets)
         })
         .catch(error => {
-          console.log("Failed to load Pods:");
+          console.log("Failed to load Secrets:");
           console.log(error);
         });
+    },
+    openPopup: function(token) {
+      this.selectedToken = token;
+
+      const panelHandle = this.$showPanel({
+        component : 'slideout-panel',
+        openOn: 'bottom',
+        height: 200,
+        props: {
+          text: 12312313
+        }
+      })
+
+      console.log(panelHandle)
+
+      panelHandle.promise
+        .then(result => {
+          console.log(result)
+        });
+
     }
   },
   created() {
-    this.loadNodes();
+    this.loadSecrets();
   }
 };
 </script>
+<style>
+    @import "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css";
+</style>
