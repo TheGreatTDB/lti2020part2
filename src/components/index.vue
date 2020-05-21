@@ -19,6 +19,8 @@
       <listServices v-if="this.$store.state.currentTab == 'listServices' && this.$store.state.token != null"/>
 
       <statusEndpoints v-if="this.$store.state.currentTab == 'statusEndpoints' && this.$store.state.token != null"/>
+
+      <listDeployments v-if="this.$store.state.currentTab == 'listDeployments' && this.$store.state.token != null"/>
     </div>
   </div>
 </template>
@@ -41,6 +43,8 @@ import ListServicesComponent from "./listServices"; //Done
 
 import StatusEndpointsComponent from "./statusEndpoints"; //Done
 
+import ListDeploymentsComponent from "./listDeployments"; //Done
+
 export default {
   name: 'HelloWorld',
   props: {
@@ -62,7 +66,9 @@ export default {
 
     listServices: ListServicesComponent,
 
-    statusEndpoints: StatusEndpointsComponent
+    statusEndpoints: StatusEndpointsComponent,
+
+    listDeployments: ListDeploymentsComponent
   }
 }
 </script>

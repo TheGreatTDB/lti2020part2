@@ -22,7 +22,7 @@
         <tr v-for="secret in secrets" :key="secret.metadata.name">
           <td>{{ secret.metadata.name }}</td>
           <td>{{ secret.metadata.namespace }}</td>
-          <td>{{ secret.metadata.annotations["kubernetes.io/service-account.name"] }}</td>
+          <td>{{ secret.metadata.annotations }}</td>
           <td>{{ secret.metadata.resourceVersion }}</td>
           <td>{{ secret.metadata.creationTimestamp }}</td>
           <td>{{ secret.type }}</td>
