@@ -33,16 +33,10 @@
           <td>{{ node.metadata.creationTimestamp }}</td>
           <td>{{ node.status.nodeInfo.kubeletVersion }}</td>
           <td>{{ node.status.addresses[0].address }}</td>
-          
-          <td v-if="node.metadata.labels['node-role.kubernetes.io/master'].length == 0">master</td>
-          <td v-if="node.metadata.labels['node-role.kubernetes.io/master'].length != 0">
-            {{ node.metadata.labels["node-role.kubernetes.io/master"] }}
-          </td>
-
+          <td v-if = "node.metadata.labels['node-role.kubernetes.io/master']">master</td>
+          <td v-else> worker </td>
           <td>{{ node.status.nodeInfo.osImage }}</td>
-
           <td>{{ node.status.nodeInfo.kernelVersion }}</td>
-
           <td>{{ node.status.nodeInfo.containerRuntimeVersion }}</td>
           <td>{{ node.status.capacity.cpu }}</td>
           <td>{{ node.status.allocatable.cpu }}</td>
@@ -67,7 +61,7 @@ export default {
     loadNodes: function() {
       var axiosPods = this.axios.create({
         headers: {
-          "Authorization": 'Bearer ' + this.$store.state.token
+          Authorization: "Bearer " + this.$store.state.token
         }
       });
 
@@ -78,7 +72,7 @@ export default {
           console.log(this.nodes);
         })
         .catch(error => {
-          console.log("Failed to load Pods:");
+          console.log("Failed to load Nodes");
           console.log(error);
         });
     }
