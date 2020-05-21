@@ -15,18 +15,19 @@
           <th>Resource Version</th>
           <th>Age</th>
           <th>Type</th>
-          <th>Token</th>
+          <th>Data</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="secret in secrets" :key="secret.metadata.name">
           <td>{{ secret.metadata.name }}</td>
           <td>{{ secret.metadata.namespace }}</td>
-          <td>{{ secret.metadata.annotations }}</td>
+          <td v-if="secret.metadata.annotations != undefined">{{ secret.metadata.annotations['kubernetes.io/service-account.name'] }}</td>
+          <td v-else> ----- </td>
           <td>{{ secret.metadata.resourceVersion }}</td>
           <td>{{ secret.metadata.creationTimestamp }}</td>
           <td>{{ secret.type }}</td>
-          <td><button class="btn btn-primary" v-on:click.prevent="openPopup(secret.data.token)">See Token</button></td>
+          <td><button class="btn btn-primary" v-on:click.prevent="openPopup(secret.data)">See Token</button></td>
         </tr>
       </tbody>
     </table>
@@ -38,7 +39,7 @@ export default {
   data: function() {
     return {
       secrets: null,
-      selectedToken: "",
+      selectedData: "",
     };
   },
   methods: {
@@ -60,15 +61,15 @@ export default {
           console.log(error);
         });
     },
-    openPopup: function(token) {
-      this.selectedToken = token;
+    openPopup: function(data) {
+      this.selectedData = data;
 
       const panelHandle = this.$showPanel({
         component : 'slideout-panel',
         openOn: 'bottom',
         height: 200,
         props: {
-          text: 12312313
+          text: this.selectedData
         }
       })
 

@@ -20,6 +20,7 @@
 
       <statusEndpoints v-if="this.$store.state.currentTab == 'statusEndpoints' && this.$store.state.token != null"/>
 
+      <createDeployment v-if="this.$store.state.currentTab == 'createDeployment' && this.$store.state.token != null"/>
       <listDeployments v-if="this.$store.state.currentTab == 'listDeployments' && this.$store.state.token != null"/>
     </div>
   </div>
@@ -43,6 +44,7 @@ import ListServicesComponent from "./listServices"; //Done
 
 import StatusEndpointsComponent from "./statusEndpoints"; //Done
 
+import CreateDeploymentComponent from "./createDeployment"; //Not Done
 import ListDeploymentsComponent from "./listDeployments"; //Done
 
 export default {
@@ -68,6 +70,7 @@ export default {
 
     statusEndpoints: StatusEndpointsComponent,
 
+    createDeployment: CreateDeploymentComponent,
     listDeployments: ListDeploymentsComponent
   }
 }
