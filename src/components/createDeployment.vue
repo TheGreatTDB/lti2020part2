@@ -1,11 +1,11 @@
 <template>
   <div>
-    <p>Pod Name:</p>
+    <p>Deployment Name:</p>
     <b-form-input class="w-25 mx-auto" v-model="podName" placeholder="Pod Name" />
 
     <p>Select Namespace:</p>
     <multiselect v-if="namespaces != null"
-      v-model="podNamespace"
+      v-model="deploymentNamespace"
       :options="namespaces"
       :multiple="false"
       label='metadata'
@@ -46,11 +46,9 @@
 export default {
   data: function() {
     return {
-      podName: "",
-      podNamespace: null,
-      podContainers: null,
+      deploymentName: "",
+      deploymentNamespace: null,
       namespaces: null,
-      containers: null,
     };
   },
   methods: {
@@ -62,31 +60,41 @@ export default {
       });
 
       axiosCreatePod
-        .post("/api/v1/namespaces/" + this.podNamespace.metadata.name + "/pods/", 
+        .post("/apis/apps/v1/namespaces/" + this.deploymentNamespace.metadata.name + "/deployments", 
           {
-            kind: "Pod",
-            apiVersion: "v1",
-            metadata:{
-                name: this.podName,
-                namespace: this.podNamespace.metadata.name,
-                labels: {
-                    "name": "nginx"
-                }
+            "apiVersion":"apps/v1",
+            "kind":"Deployment",
+            "metadata":{
+              "name": this.deploymentName,
+              "labels":{
+                "app":"nginx"
+              }
             },
-            spec: {
-                containers: [{
-                    name: "nginx",
-                    image: "nginx",
-                    ports: [{"containerPort": 80}],
-                    resources: {
-                        limits: {
-                            memory: "128Mi",
-                            cpu: "500m"
-                        }
-                    }
-                }]
+            "spec": {
+              "replicas" : 3,
+              "selector": {
+                "matchLabels" : {
+                  "app":"nginx"
+                }
+              },
+              "template" : {
+                "metadata" : {
+                  "labels" : {
+                    "app":"nginx"
+                  }
+                },
+                "spec":{
+                    "containers":[{
+                      "name":"ngnix",
+                      "image":"nginx:1.7.9",
+                      "ports":[{
+                          "containerPort": 80 
+                      }]
+                    }]
+                }
+              }
             }
-          }
+        }
         )
         .then(response => {
           console.log(response);

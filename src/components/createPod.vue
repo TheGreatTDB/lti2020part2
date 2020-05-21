@@ -21,23 +21,14 @@
       </template>
     </multiselect>
 
-    <!--<p>Select Containers:</p>
-    <multiselect v-if="containers != null"
-      v-model="podContainers"
-      :options="containers"
-      :multiple="true"
-      label='metadata'
-      track-by='metadata'
-      placeholder="Pick 1 or More Containers"
-      class="table table-striped"
-    >
-      <template slot="selection" slot-scope="{ values, search, isOpen }">
-        <span
-          class="multiselect__single"
-          v-if="values.length &amp;&amp; !isOpen"
-        >{{ values.length }} options selected</span>
-      </template>
-    </multiselect>-->
+    <p>Image:</p>
+    <b-form-input class="w-25 mx-auto" v-model="podImage" placeholder="Image" />
+
+    <p>Pod Memory (Mi):</p>
+    <b-form-input class="w-25 mx-auto" v-model="podMemory" placeholder="Pod Memory (Mi)" />
+
+    <p>Pod CPU (m):</p>
+    <b-form-input class="w-25 mx-auto" v-model="podCPU" placeholder="Pod CPU (m)" />
     
     <b-button variant="outline-primary"  v-on:click.prevent="createPod()">Create Pod</b-button>
   </div>
@@ -48,6 +39,7 @@ export default {
     return {
       podName: "",
       podNamespace: null,
+      podImage: null,
       podContainers: null,
       namespaces: null,
       containers: null,
@@ -70,18 +62,18 @@ export default {
                 name: this.podName,
                 namespace: this.podNamespace.metadata.name,
                 labels: {
-                    "name": "nginx"
+                    "name": this.podImage
                 }
             },
             spec: {
                 containers: [{
-                    name: "nginx",
-                    image: "nginx",
+                    name: this.podImage,
+                    image: this.podImage,
                     ports: [{"containerPort": 80}],
                     resources: {
                         limits: {
-                            memory: "128Mi",
-                            cpu: "500m"
+                            memory: this.podMemory,
+                            cpu: this.podCPU
                         }
                     }
                 }]
