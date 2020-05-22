@@ -6,6 +6,7 @@
       :rows="10"
       :value="namespaces"
       style="margin-bottom: 2rem"
+      autoLayout="true"
     >
       <template #header>
         <div style="line-height:1.87em" class="p-clearfix">
