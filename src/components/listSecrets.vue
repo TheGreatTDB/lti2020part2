@@ -3,7 +3,7 @@
     <table class="table table-striped">
       <slideout-panel></slideout-panel>
       <tr>
-        <th>Pods: </th>
+        <th>Secrets:</th>
       </tr>
     </table>
     <table class="table table-striped">

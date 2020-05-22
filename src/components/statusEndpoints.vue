@@ -2,7 +2,7 @@
   <div>
     <table class="table table-striped">
       <tr>
-        <th>Pods: </th>
+        <th>Endpoints:</th>
       </tr>
     </table>
     <table class="table table-striped">
@@ -10,28 +10,21 @@
         <tr>
           <th>Name</th>
           <th>NameSpace</th>
-          <th>Ip Address</th>
-          <th>podCIDR</th>
-          <th>MaX CPUs</th>
-          <th>Usage CPUs</th>
-          <th>Max Memory</th>
-          <th>Usage Memory</th>
-          <th>Max Pods</th>
-          <th>Usage Pods</th>
+          <th>Age</th>
+          <th>IP</th>
+          <th>Name</th>
+          <th>Port</th>
+          <th>Protocol</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="node in nodes" :key="node.metadata.name">
-          <td>{{ node.metadata.name }}</td>
-          <td>{{ node.metadata.uid }}</td>
-          <td>{{ node.status.addresses[0].address }}</td>
-          <td>{{ node.spec.podCIDR }}</td>
-          <td>{{ node.status.capacity.cpu }}</td>
-          <td>{{ node.status.allocatable.cpu }}</td>
-          <td>{{ node.status.capacity.memory }}</td>
-          <td>{{ node.status.allocatable.memory }}</td>
-          <td>{{ node.status.capacity.pods }}</td>
-          <td>{{ node.status.allocatable.pods }}</td>
+        <tr v-for="endpoint in endpoints" :key="endpoint.metadata.name">
+          <td>{{ endpoint.metadata.name }}</td>
+          <td>{{ endpoint.metadata.namespace }}</td>
+          <td>{{ endpoint.metadata.creationTimestamp }}</td>
+          <td v-if="endpoint.subsets != undefined">{{ endpoint.subsets[0].addresses }}</td>
+          <td v-if="endpoint.subsets != undefined">{{ endpoint.subsets[0].ports }}</td>
+          <td v-if="endpoint.subsets != undefined">{{ endpoint.subsets[0].ports }}</td>
         </tr>
       </tbody>
     </table>
@@ -42,12 +35,12 @@ export default {
   props: [],
   data: function() {
     return {
-      nodes: null
+      endpoints: null
 
     };
   },
   methods: {
-    loadNodes: function() {
+    loadEnpoints: function() {
       var axiosPods = this.axios.create({
         headers: {
           "Authorization": 'Bearer ' + this.$store.state.token
@@ -55,19 +48,19 @@ export default {
       });
 
       axiosPods
-        .get("/api/v1/nodes")
+        .get("/api/v1/endpoints")
         .then(response => {
-          this.nodes = response.data.items;
-          console.log(this.nodes)
+          this.endpoints = response.data.items;
+          console.log(this.endpoints)
         })
         .catch(error => {
-          console.log("Failed to load Pods:");
+          console.log("Failed to load Endpoints:");
           console.log(error);
         });
     }
   },
   created() {
-    this.loadNodes();
+    this.loadEnpoints();
   }
 };
 </script>

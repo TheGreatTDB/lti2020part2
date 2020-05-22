@@ -2,7 +2,7 @@
   <div>
     <table class="table table-striped">
       <tr>
-        <th>Deployments: </th>
+        <th>Deployments:</th>
       </tr>
     </table>
     <table class="table table-striped">
@@ -27,7 +27,8 @@
           <td>{{ deployment.metadata.creationTimestamp }}</td>
           <td>{{ deployment.metadata.generation }}</td>
           <td>{{ deployment.spec.replicas }}</td>
-          <td>{{ deployment.spec.template.spec.volumes[0].name }}</td>
+          <td v-if="deployment.spec.template.spec.volumes != undefined">{{ deployment.spec.template.spec.volumes[0].name }}</td>
+          <td v-if="deployment.spec.template.spec.volumes == undefined"> --- </td>
           <td>{{ deployment.spec.template.spec.containers.length }}</td>
           <td>{{ deployment.spec.template.spec.restartPolicy }}</td>
           <td>{{ deployment.spec.template.spec.dnsPolicy }}</td>

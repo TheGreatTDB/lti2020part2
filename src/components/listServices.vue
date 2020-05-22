@@ -2,7 +2,7 @@
   <div>
     <table class="table table-striped">
       <tr>
-        <th>Services: </th>
+        <th>Services:</th>
       </tr>
     </table>
     <table class="table table-striped">

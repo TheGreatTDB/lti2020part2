@@ -21,8 +21,8 @@
       </template>
     </multiselect>
 
-    <p>Image:</p>
-    <b-form-input class="w-25 mx-auto" v-model="podImage" placeholder="Image" />
+    <p>Pod Image:</p>
+    <b-form-input class="w-25 mx-auto" v-model="podImage" placeholder="Image (Default: nginx)" />
 
     <p>Pod Memory (Mi):</p>
     <b-form-input class="w-25 mx-auto" v-model="podMemory" placeholder="Pod Memory (Mi)" />
@@ -39,7 +39,7 @@ export default {
     return {
       podName: "",
       podNamespace: null,
-      podImage: null,
+      podImage: "",
       podContainers: null,
       namespaces: null,
       containers: null,
@@ -47,6 +47,9 @@ export default {
   },
   methods: {
     createPod: function() {
+      if(this.podImage == ""){
+        this.podImage = "nginx"
+      }
       var axiosCreatePod = this.axios.create({
         headers: {
           "Authorization": 'Bearer ' + this.$store.state.token
@@ -85,7 +88,7 @@ export default {
           this.$store.commit("changeTab", "listPods");
         })
         .catch(error => {
-          console.log("Failed to create Volume");
+          console.log("Failed to create Pod");
           console.log(error);
         });
     },
