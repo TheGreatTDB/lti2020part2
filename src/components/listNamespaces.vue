@@ -1,29 +1,34 @@
 <template>
   <div>
     <table class="table table-striped">
-        <th>Namespaces:</th>
+      <th>Namespaces:</th>
     </table>
     <table class="table table-striped">
       <thead>
         <tr>
           <th>Name</th>
-          <th>Age</th>
-          <th>Resource Version</th>
-          <th>Manager</th>
-          <th>API Version</th>
           <th>Status</th>
+          <th>Age</th>
+          <!-- <th>Resource Version</th>
+          <th>Manager</th>
+          <th>API Version</th>-->
           <th>Options</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="namespace in namespaces" :key="namespace.metadata.name">
           <td>{{ namespace.metadata.name }}</td>
-          <td>{{ namespace.metadata.creationTimestamp}}</td>
-          <td>{{ namespace.metadata.resourceVersion }}</td>
-          <td>{{ namespace.metadata.managedFields[0].manager }}</td>
-          <td>{{ namespace.metadata.managedFields[0].apiVersion }}</td>
           <td>{{ namespace.status.phase }}</td>
-          <td><b-button variant="outline-danger" v-on:click.prevent="deleteNamespace(namespace)">Delete</b-button></td>
+          <td>{{ namespace.metadata.creationTimestamp}}</td>
+          <!-- <td>{{ namespace.metadata.resourceVersion }}</td>
+          <td>{{ namespace.metadata.managedFields[0].manager }}</td>
+          <td>{{ namespace.metadata.managedFields[0].apiVersion }}</td>-->
+          <td>
+            <b-button
+              variant="outline-danger"
+              v-on:click.prevent="deleteNamespace(namespace)"
+            >Delete</b-button>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -41,7 +46,7 @@ export default {
     loadNamespaces: function() {
       var axiosNamespaces = this.axios.create({
         headers: {
-          "Authorization": 'Bearer ' + this.$store.state.token
+          Authorization: "Bearer " + this.$store.state.token
         }
       });
 
@@ -56,18 +61,18 @@ export default {
           console.log(error);
         });
     },
-    deleteNamespace: function(selectedNamespace){
+    deleteNamespace: function(selectedNamespace) {
       var axiosDeleteNamespace = this.axios.create({
         headers: {
-          "Authorization": 'Bearer ' + this.$store.state.token
+          Authorization: "Bearer " + this.$store.state.token
         }
       });
 
       axiosDeleteNamespace
         .delete("/api/v1/namespaces/" + selectedNamespace.metadata.name)
         .then(response => {
-          console.log(response.data)
-          this.namespaces.delete(selectedNamespace)
+          console.log(response.data);
+          this.namespaces.delete(selectedNamespace);
         })
         .catch(error => {
           console.log("Failed to delete selected Namespace");

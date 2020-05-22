@@ -29,7 +29,6 @@
         <tr v-for="node in nodes" :key="node.metadata.name">
           <td>{{ node.metadata.name }}</td>
           <td>{{ node.status.conditions[3].type}}</td>
-          <!--  POR AQUI UM IF NO STATUS -->
           <td>{{ node.metadata.creationTimestamp }}</td>
           <td>{{ node.status.nodeInfo.kubeletVersion }}</td>
           <td>{{ node.status.addresses[0].address }}</td>
