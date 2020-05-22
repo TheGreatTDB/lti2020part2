@@ -1,36 +1,35 @@
 <template>
   <div>
-    <p>Pod Name:</p>
-    <b-form-input class="w-25 mx-auto" v-model="podName" placeholder="Pod Name" />
+    <v-col class="mb-4">
+      <h1 class="display-2 font-weight-bold mb-3">Pod</h1>
 
-    <p>Select Namespace:</p>
-    <multiselect v-if="namespaces != null"
-      v-model="podNamespace"
-      :options="namespaces"
-      :multiple="false"
-      label='metadata'
-      track-by='metadata'
-      placeholder="Pick 1 Namespace"
-      class="table table-striped"
-    >
-      <template slot="selection" slot-scope="{ values, search, isOpen }">
-        <span
-          class="multiselect__single"
-          v-if="values.length &amp;&amp; !isOpen"
-        >{{ values.length }} options selected</span>
-      </template>
-    </multiselect>
+      <p class="subheading font-weight-regular">Create a new Pod in a specific namespace</p>
+      <v-col cols="6" sm="3" md="3">
+        <v-text-field v-model="podName" label="Pod Name"></v-text-field>
+        <v-select
+          :items="namespaces"
+          v-model="podNamespace"
+          item-text="metadata.name"
+          label="Namespace"
+        ></v-select>
+      </v-col>
 
-    <p>Image:</p>
-    <b-form-input class="w-25 mx-auto" v-model="podImage" placeholder="Image" />
+      <v-col cols="6" sm="3" md="3">
+        <v-text-field v-model="podImage" label="Image Name"></v-text-field>
+      </v-col>
 
-    <p>Pod Memory (Mi):</p>
-    <b-form-input class="w-25 mx-auto" v-model="podMemory" placeholder="Pod Memory (Mi)" />
+      <v-col cols="6" sm="3" md="3">
+        <v-text-field v-model="podMemory" label="Memory Limits (Mi)"></v-text-field>
+      </v-col>
 
-    <p>Pod CPU (m):</p>
-    <b-form-input class="w-25 mx-auto" v-model="podCPU" placeholder="Pod CPU (m)" />
-    
-    <b-button variant="outline-primary"  v-on:click.prevent="createPod()">Create Pod</b-button>
+      <v-col cols="6" sm="3" md="3">
+        <v-text-field v-model="podCPU" label="CPU Limits (m)"></v-text-field>
+      </v-col>
+
+      <div class="my-2">
+        <v-btn depressed v-on:click.prevent="createPod()" color="primary">Create Pod</v-btn>
+      </div>
+    </v-col>
   </div>
 </template>
 <script>
@@ -38,45 +37,49 @@ export default {
   data: function() {
     return {
       podName: "",
-      podNamespace: null,
-      podImage: null,
-      podContainers: null,
-      namespaces: null,
-      containers: null,
+      podNamespace: {},
+      podImage: "",
+      podContainers: "",
+      namespaces: [],
+      containers: "",
+      podCPU:"",
+      podMemory: ""
     };
   },
   methods: {
     createPod: function() {
       var axiosCreatePod = this.axios.create({
         headers: {
-          "Authorization": 'Bearer ' + this.$store.state.token
+          Authorization: "Bearer " + this.$store.state.token
         }
       });
-
       axiosCreatePod
-        .post("/api/v1/namespaces/" + this.podNamespace.metadata.name + "/pods/", 
+        .post(
+          "/api/v1/namespaces/" + this.podNamespace + "/pods/",
           {
             kind: "Pod",
             apiVersion: "v1",
-            metadata:{
-                name: this.podName,
-                namespace: this.podNamespace.metadata.name,
-                labels: {
-                    "name": this.podImage
-                }
+            metadata: {
+              name: this.podName,
+              namespace: this.podNamespace,
+              labels: {
+                name: this.podImage
+              }
             },
             spec: {
-                containers: [{
-                    name: this.podImage,
-                    image: this.podImage,
-                    ports: [{"containerPort": 80}],
-                    resources: {
-                        limits: {
-                            memory: this.podMemory,
-                            cpu: this.podCPU
-                        }
+              containers: [
+                {
+                  name: this.podImage,
+                  image: this.podImage,
+                  ports: [{ containerPort: 80 }],
+                  resources: {
+                    limits: {
+                      memory: this.podMemory,
+                      cpu: this.podCPU
                     }
-                }]
+                  }
+                }
+              ]
             }
           }
         )
@@ -92,7 +95,7 @@ export default {
     loadNamespaces: function() {
       var axiosNamespaces = this.axios.create({
         headers: {
-          "Authorization": 'Bearer ' + this.$store.state.token
+          Authorization: "Bearer " + this.$store.state.token
         }
       });
 
@@ -100,15 +103,15 @@ export default {
         .get("/api/v1/namespaces")
         .then(response => {
           this.namespaces = response.data.items;
-          console.log(this.namespaces)
+          console.log(this.namespaces);
         })
         .catch(error => {
           console.log("Failed to load Namespaces:");
           console.log(error);
         });
-    },
+    }
   },
-  created(){
+  created() {
     this.loadNamespaces();
   }
 };
