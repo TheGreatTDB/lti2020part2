@@ -1,27 +1,45 @@
 <template>
   <div class="hello">
-    <login v-if="this.$store.state.token == null"/>
+    <login v-if="this.$store.state.token == null" />
     <div v-if="this.$store.state.token != null">
-      <menuNav/>
-      <br/>
-      <br/>
+      <menuNav />
 
-      <listNamespaces v-if="this.$store.state.currentTab == 'listNamespaces' && this.$store.state.token != null"/>
-      <createNamespace v-if="this.$store.state.currentTab == 'createNamespace' && this.$store.state.token != null"/>
+      <listNamespaces
+        v-if="this.$store.state.currentTab == 'listNamespaces' && this.$store.state.token != null"
+      />
+      <createNamespace
+        v-if="this.$store.state.currentTab == 'createNamespace' && this.$store.state.token != null"
+      />
 
-      <listNodes v-if="this.$store.state.currentTab == 'listNodes' && this.$store.state.token != null"/>
+      <listNodes
+        v-if="this.$store.state.currentTab == 'listNodes' && this.$store.state.token != null"
+      />
 
-      <listPods v-if="this.$store.state.currentTab == 'listPods' && this.$store.state.token != null"/>
-      <createPod v-if="this.$store.state.currentTab == 'createPod' && this.$store.state.token != null"/>
+      <listPods
+        v-if="this.$store.state.currentTab == 'listPods' && this.$store.state.token != null"
+      />
+      <createPod
+        v-if="this.$store.state.currentTab == 'createPod' && this.$store.state.token != null"
+      />
 
-      <listSecrets v-if="this.$store.state.currentTab == 'listSecrets' && this.$store.state.token != null"/>
+      <listSecrets
+        v-if="this.$store.state.currentTab == 'listSecrets' && this.$store.state.token != null"
+      />
 
-      <listServices v-if="this.$store.state.currentTab == 'listServices' && this.$store.state.token != null"/>
+      <listServices
+        v-if="this.$store.state.currentTab == 'listServices' && this.$store.state.token != null"
+      />
 
-      <statusEndpoints v-if="this.$store.state.currentTab == 'statusEndpoints' && this.$store.state.token != null"/>
+      <statusEndpoints
+        v-if="this.$store.state.currentTab == 'statusEndpoints' && this.$store.state.token != null"
+      />
 
-      <createDeployment v-if="this.$store.state.currentTab == 'createDeployment' && this.$store.state.token != null"/>
-      <listDeployments v-if="this.$store.state.currentTab == 'listDeployments' && this.$store.state.token != null"/>
+      <createDeployment
+        v-if="this.$store.state.currentTab == 'createDeployment' && this.$store.state.token != null"
+      />
+      <listDeployments
+        v-if="this.$store.state.currentTab == 'listDeployments' && this.$store.state.token != null"
+      />
     </div>
   </div>
 </template>
@@ -36,7 +54,7 @@ import CreateNamespaceComponent from "./createNamespace"; //Done
 import ListNodesComponent from "./listNodes"; //Done +/-
 
 import ListPodsComponent from "./listPods"; //Done +/-
-import CreatePodComponent from "./createPod"; //Done -/+ 
+import CreatePodComponent from "./createPod"; //Done -/+
 
 import ListSecretsComponent from "./listSecrets"; //Done (Falta o fazer o Popup para ver o token)
 
@@ -48,7 +66,7 @@ import CreateDeploymentComponent from "./createDeployment"; //Not Done
 import ListDeploymentsComponent from "./listDeployments"; //Done
 
 export default {
-  name: 'HelloWorld',
+  name: "HelloWorld",
   props: {
     msg: String
   },
@@ -73,7 +91,7 @@ export default {
     createDeployment: CreateDeploymentComponent,
     listDeployments: ListDeploymentsComponent
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

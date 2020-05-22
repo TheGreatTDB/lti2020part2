@@ -13,6 +13,8 @@
     "bootstrap-vue": "^2.13.1",
     "core-js": "^3.6.4",
     "https-agent": "^1.0.0",
+    "primeicons": "^3.0.0-rc.1",
+    "primevue": "^2.0.0-beta.1",
     "vue": "^2.6.11",
     "vue-axios": "^2.1.5",
     "vue-multiselect": "^2.1.6",

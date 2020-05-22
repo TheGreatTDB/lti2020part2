@@ -1,37 +1,35 @@
 <template>
   <div>
-    <table class="table table-striped">
-      <th>Namespaces:</th>
-    </table>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Status</th>
-          <th>Age</th>
-          <!-- <th>Resource Version</th>
-          <th>Manager</th>
-          <th>API Version</th>-->
-          <th>Options</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="namespace in namespaces" :key="namespace.metadata.name">
-          <td>{{ namespace.metadata.name }}</td>
-          <td>{{ namespace.status.phase }}</td>
-          <td>{{ namespace.metadata.creationTimestamp}}</td>
-          <!-- <td>{{ namespace.metadata.resourceVersion }}</td>
-          <td>{{ namespace.metadata.managedFields[0].manager }}</td>
-          <td>{{ namespace.metadata.managedFields[0].apiVersion }}</td>-->
-          <td>
-            <b-button
-              variant="outline-danger"
-              v-on:click.prevent="deleteNamespace(namespace)"
-            >Delete</b-button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <DataTable
+      :filters="filters"
+      :paginator="true"
+      :rows="10"
+      :value="namespaces"
+      style="margin-bottom: 2rem"
+    >
+      <template #header>
+        <div style="line-height:1.87em" class="p-clearfix">
+          <Button icon="pi pi-refresh" style="float: left" />Namespaces
+        </div>
+        <div style="text-align: right">
+          <i class="pi pi-search" style="margin: 4px 4px 0 0"></i>
+          <InputText v-model="filters['global']" placeholder="Global Search" size="50" />
+        </div>
+      </template>
+      <Column :sortable="true" field="metadata.name" header="Name"></Column>
+      <Column :sortable="true" field="status.phase" header="Status"></Column>
+      <Column :sortable="true" field="metadata.creationTimestamp" header="Age"></Column>
+      <Column :sortable="true" header="Options">
+        <template #body="slotProps">
+          <Button
+            label="Delete"
+            class="p-button-danger"
+            v-on:click.prevent="deleteNamespace(slotProps.data)"
+          ></Button>
+        </template>
+      </Column>
+      <template #footer>In total there are {{namespaces ? namespaces.length : 0 }} namespaces.</template>
+    </DataTable>
   </div>
 </template>
 <script>
@@ -39,7 +37,9 @@ export default {
   props: [],
   data: function() {
     return {
-      namespaces: null
+      namespaces: null,
+      columns: null,
+      filters: {}
     };
   },
   methods: {
