@@ -1,39 +1,43 @@
 <template>
-  <div id="app">
-    <!--<img alt="Vue logo" src="./assets/logo.png">-->
-    <index msg="Welcome to Your Vue.js App" />
+  <v-app>
+    <v-app-bar app color="primary" dark>
+      <div class="d-flex align-center">
+        <v-img
+          alt="Logo"
+          class="shrink mr-2"
+          contain
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Kubernetes_logo_without_workmark.svg/1200px-Kubernetes_logo_without_workmark.svg.png"
+          transition="scale-transition"
+          width="40"
+        />
 
-  </div>
+
+      </div>
+
+      <v-spacer></v-spacer>
+
+    </v-app-bar>
+
+    <v-content>
+        <index/>
+    </v-content>
+  </v-app>
+  
 </template>
 
 <script>
-
 import IndexComponent from "./components/index.vue";
 
 export default {
   name: "App",
+
   components: {
-    index: IndexComponent,
-  }
+    index: IndexComponent
+  },
+
+  data: () => ({
+    //
+  })
 };
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-  text-align: center;
-
-}
-.app-container {
-  text-align: center;
-}
-body #app .p-button {
-  margin-left: .2em;
-}
-form {
-  margin-top: 2em;
-}
-</style>

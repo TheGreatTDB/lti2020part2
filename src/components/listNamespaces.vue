@@ -1,36 +1,40 @@
 <template>
   <div>
-    <DataTable
-      :filters="filters"
-      :paginator="true"
-      :rows="10"
-      :value="namespaces"
-      style="margin-bottom: 2rem"
-      autoLayout="true"
-    >
-      <template #header>
-        <div style="line-height:1.87em" class="p-clearfix">
-          <Button icon="pi pi-refresh" style="float: left" />Namespaces
-        </div>
-        <div style="text-align: right">
-          <i class="pi pi-search" style="margin: 4px 4px 0 0"></i>
-          <InputText v-model="filters['global']" placeholder="Global Search" size="50" />
-        </div>
-      </template>
-      <Column :sortable="true" field="metadata.name" header="Name"></Column>
-      <Column :sortable="true" field="status.phase" header="Status"></Column>
-      <Column :sortable="true" field="metadata.creationTimestamp" header="Age"></Column>
-      <Column :sortable="true" header="Options">
-        <template #body="slotProps">
-          <Button
-            label="Delete"
-            class="p-button-danger"
-            v-on:click.prevent="deleteNamespace(slotProps.data)"
-          ></Button>
+    <v-card>
+      <v-card-title>
+        Namespaces
+        <v-spacer></v-spacer>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
+        ></v-text-field>
+      </v-card-title>
+      <v-data-table :headers="headers" :items="namespaces" :search="search" class="elevation-1">
+        <template v-slot:top>
+          <v-toolbar flat color="white">
+            <v-divider class="mx-4" inset vertical></v-divider>
+            <v-spacer></v-spacer>
+            <v-dialog v-model="dialog" max-width="500px">
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  color="primary"
+                  dark
+                  class="mb-2"
+                  @click="changetab()"
+                  v-on="on"
+                >New Namespace</v-btn>
+              </template>
+            </v-dialog>
+          </v-toolbar>
         </template>
-      </Column>
-      <template #footer>In total there are {{namespaces ? namespaces.length : 0 }} namespaces.</template>
-    </DataTable>
+        <template v-slot:item.actions="{ item }">
+          <v-icon @click="deleteNamespace(item)">mdi-delete</v-icon>
+        </template>
+      </v-data-table>
+    </v-card>
   </div>
 </template>
 <script>
@@ -38,9 +42,20 @@ export default {
   props: [],
   data: function() {
     return {
-      namespaces: null,
-      columns: null,
-      filters: {}
+      namespaces: [],
+      dialog: "",
+      search: "",
+      headers: [
+        {
+          text: "Name",
+          align: "start",
+          sortable: true,
+          value: "metadata.name"
+        },
+        { text: "Status", value: "status.phase" },
+        { text: "Age", value: "metadata.creationTimestamp" },
+        { text: "Actions", value: "actions", sortable: false }
+      ]
     };
   },
   methods: {
@@ -61,6 +76,9 @@ export default {
           console.log("Failed to load Namespaces:");
           console.log(error);
         });
+    },
+    changetab: function() {
+      this.$store.commit("changeTab", "createNamespace");
     },
     deleteNamespace: function(selectedNamespace) {
       var axiosDeleteNamespace = this.axios.create({

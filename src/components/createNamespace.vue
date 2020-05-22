@@ -1,45 +1,45 @@
 <template>
   <div>
-    <p>Namespace Name:</p>
-    <b-form-input class="w-25 mx-auto" v-model="nameNamespace" placeholder="Namespace Name" />
+    <v-col class="mb-4">
+      <h1 class="display-2 font-weight-bold mb-3">Namespace</h1>
 
-    <b-button variant="outline-primary"  v-on:click.prevent="createNamespace()">Create Namespace</b-button>
+      <p class="subheading font-weight-regular">Create a new namespace with a unique name</p>
+      <v-col cols="6" sm="3" md="3">
+        <v-text-field v-model="nameNamespace" label="Namespace Name"></v-text-field>
+      </v-col>
+              <div class="my-2">
+          <v-btn depressed small  v-on:click.prevent="createNamespace()" color="primary">Create</v-btn>
+        </div>
+    </v-col>
+
   </div>
 </template>
 <script>
 export default {
   data: function() {
     return {
-      nameNamespace: "",
+      nameNamespace: ""
     };
   },
   methods: {
     createNamespace: function() {
       var axiosCreateNamespace = this.axios.create({
         headers: {
-          "Authorization": 'Bearer ' + this.$store.state.token
+          Authorization: "Bearer " + this.$store.state.token
         }
       });
 
       axiosCreateNamespace
-        .post("/api/v1/namespaces/", 
-          {
-            "apiVersion": "v1",
-            "kind":"Namespace",
-            "metadata":{
-              "creationTimestamp":null,
-              "name": this.nameNamespace
-              
-            },
-            "spec":{
-              
-            },
-            "status":{
-              
-            }
-            
-          }
-        )
+        .post("/api/v1/namespaces/", {
+          apiVersion: "v1",
+          kind: "Namespace",
+          metadata: {
+            creationTimestamp: null,
+            name: this.nameNamespace
+          },
+          spec: {},
+          status: {}
+        })
         .then(response => {
           console.log(response);
           this.$store.commit("changeTab", "listNamespaces");

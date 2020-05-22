@@ -1,32 +1,26 @@
 <template>
   <div>
-    <DataTable
-      :filters="filters"
-      :paginator="true"
-      :rows="10"
-      :value="nodes"
-      style="margin-bottom: 2rem"
-    >
-      <template #header>
-        <div style="line-height:1.87em" class="p-clearfix">
-          <Button icon="pi pi-refresh" style="float: left" />Nodes
-        </div>
-        <div style="text-align: right">
-          <i class="pi pi-search" style="margin: 4px 4px 0 0"></i>
-          <InputText v-model="filters['global']" placeholder="Global Search" size="50" />
-        </div>
-      </template>
-      <Column :sortable="true" field="metadata.name" header="Name"></Column>
-      <Column :sortable="true" field="status.conditions[3].type" header="Status"></Column>
-      <Column :sortable="true" field="metadata.creationTimestamp" header="Age"></Column>
-      <Column :sortable="true" field="status.nodeInfo.kubeletVersion " header="Version"></Column>
-      <Column :sortable="true" field="status.addresses[0].address" header="Ip Address"></Column>
-      <!-- <Column :sortable="true" field="metadata.creationTimestamp" header="Role"></Column> -->
-      <Column :sortable="true" field="status.nodeInfo.osImage" header="OS image"></Column>
-      <Column :sortable="true" field="status.nodeInfo.kernelVersion" header="Kernel Runtime"></Column>
-      <Column :sortable="true" field="status.nodeInfo.containerRuntimeVersion" header="Age"></Column>
-          <template #footer>In total there are {{nodes ? nodes.length : 0 }} nodes.</template>
-    </DataTable>
+    <v-card>
+      <v-card-title>
+        Nodes
+        <v-spacer></v-spacer>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
+        ></v-text-field>
+      </v-card-title>
+      <v-data-table :headers="headers" :items="nodes" :search="search" class="elevation-1">
+        <template v-slot:item.roles="{ item }">
+          <div>{{ getRole(item) }}</div>
+        </template>
+        <template v-slot:item.status="{ item }">
+          <div>{{ getStatus(item) }}</div>
+        </template>
+      </v-data-table>
+    </v-card>
 
     <table class="table table-striped">
       <tr>
@@ -81,8 +75,27 @@ export default {
   props: [],
   data: function() {
     return {
-      nodes: null,
-      filters: {}
+      nodes: [],
+      search: "",
+      headers: [
+        {
+          text: "Name",
+          align: "start",
+          sortable: true,
+          value: "metadata.name"
+        },
+        { text: "Status", value: "status" },
+        { text: "Roles", value: "roles" },
+        { text: "Age", value: "metadata.creationTimestamp" },
+        { text: "Version", value: "status.nodeInfo.kubeletVersion" },
+        { text: "Ip Address", value: "status.addresses[0].address" },
+        { text: "OS image", value: "status.nodeInfo.osImage" },
+        { text: "Kernel version", value: "status.nodeInfo.kernelVersion" },
+        {
+          text: "Container Runtime",
+          value: "status.nodeInfo.containerRuntimeVersion"
+        }
+      ]
     };
   },
   methods: {
@@ -103,6 +116,15 @@ export default {
           console.log("Failed to load Nodes");
           console.log(error);
         });
+    },
+    getRole: function(node) {
+      if (node.metadata.labels["node-role.kubernetes.io/master"] != undefined)
+        return "Master";
+      else return "Worker";
+    },
+    getStatus: function(node) {
+      if (node.status.conditions[4].status != "True") return "NotReady";
+      else return "Ready";
     }
   },
   created() {
