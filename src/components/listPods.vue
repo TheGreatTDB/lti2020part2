@@ -1,38 +1,34 @@
 <template>
   <div>
-    <table class="table table-striped">
-      <tr>
-        <th>Pods:</th>
-      </tr>
-    </table>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Namespace</th>
-          <th>Name</th>
-          <th>Containers</th>
-          <!--<th>Status</th>-->
-          <th>Restarts</th>
-          <th>Age</th>
-          <th>IP</th>
-          <th>Node</th>
-          <th>Options</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="pod in pods" :key="pod.metadata.name">
-          <td>{{ pod.metadata.namespace }}</td>
-          <td>{{ pod.metadata.name }}</td>
-          <td>{{ pod.spec.containers.length }}</td>
-          <td>{{ pod.status.phase }}</td>
-          <!--<td>{{ pod.status.containerStatuses[0].restartCount }}</td>-->
-          <td>{{ pod.metadata.creationTimestamp }}</td>
-          <td>{{ pod.status.podIP}}</td>
-          <td>{{ pod.spec.nodeName}}</td>
-          <td><b-button variant="outline-danger" v-on:click.prevent="deletePod(pod)">Delete</b-button></td>
-        </tr>
-      </tbody>
-    </table>
+    <v-card>
+      <v-card-title>
+        Pods
+        <v-spacer></v-spacer>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
+        ></v-text-field>
+      </v-card-title>
+      <v-data-table :headers="headers" :items="pods" :search="search" class="elevation-1">
+        <template v-slot:top>
+          <v-toolbar flat color="white">
+            <v-divider class="mx-4" inset vertical></v-divider>
+            <v-spacer></v-spacer>
+            <v-dialog v-model="dialog" max-width="500px">
+              <template v-slot:activator="{ on }">
+                <v-btn color="primary" dark class="mb-2" @click="changetab()" v-on="on">Create Pod</v-btn>
+              </template>
+            </v-dialog>
+          </v-toolbar>
+        </template>
+        <template v-slot:item.actions="{ item }">
+          <v-icon @click="deletePod(item)">mdi-delete</v-icon>
+        </template>
+      </v-data-table>
+    </v-card>
   </div>
 </template>
 <script>
@@ -40,14 +36,34 @@ export default {
   props: [],
   data: function() {
     return {
-      pods: null
+      pods: [],
+      search: "",
+      dialog: "",
+      headers: [
+        {
+          text: "Name",
+          align: "start",
+          sortable: true,
+          value: "metadata.name"
+        },
+        { text: "Status", value: "status.phase" },
+        { text: "Restarts", value: "status.containerStatuses[0].restartCount" },
+        { text: "Age", value: "metadata.creationTimestamp" },
+        { text: "Namespace", value: "metadata.namespace" },
+        { text: "Containers", value: "spec.containers.length" },
+        { text: "Node", value: "spec.nodeName" },
+        { text: "Actions", value: "actions", sortable: false }
+      ]
     };
   },
   methods: {
+    changetab: function() {
+      this.$store.commit("changeTab", "createPod");
+    },
     loadPods: function() {
       var axiosPods = this.axios.create({
         headers: {
-          "Authorization": 'Bearer ' + this.$store.state.token
+          Authorization: "Bearer " + this.$store.state.token
         }
       });
 
@@ -62,17 +78,22 @@ export default {
           console.log(error);
         });
     },
-    deletePod: function(selectedPod){
+    deletePod: function(selectedPod) {
       var axiosDeletePod = this.axios.create({
         headers: {
-          "Authorization": 'Bearer ' + this.$store.state.token
+          Authorization: "Bearer " + this.$store.state.token
         }
       });
 
       axiosDeletePod
-        .delete("/api/v1/namespaces/" + selectedPod.metadata.namespace + "/pods/" + selectedPod.metadata.name)
+        .delete(
+          "/api/v1/namespaces/" +
+            selectedPod.metadata.namespace +
+            "/pods/" +
+            selectedPod.metadata.name
+        )
         .then(response => {
-          console.log(response.data)
+          console.log(response.data);
           this.loadPods();
         })
         .catch(error => {
