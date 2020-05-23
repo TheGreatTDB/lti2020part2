@@ -55,10 +55,12 @@ export default {
         .get("/api/v1/services")
         .then(response => {
           this.services = response.data.items;
-          console.log(this.services);
+          this.$emit("popup", "info", "Services Loaded");
+          console.log(this.services)
         })
         .catch(error => {
-          console.log("Failed to load Services:");
+          console.log("Failed to load Pods:");
+          this.$emit("popup", "error", "Failed to Load Services");
           console.log(error);
         });
     }

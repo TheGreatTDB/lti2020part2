@@ -108,10 +108,12 @@ export default {
         .get("/apis/apps/v1/deployments")
         .then(response => {
           this.deployments = response.data.items;
+          this.$emit("popup", "info", "Deployments loaded");
           console.log(this.deployments);
         })
         .catch(error => {
           console.log("Failed to load Deployment:");
+          this.$emit("popup", "error", "Deployments Failed to Load");
           console.log(error);
         });
     },
@@ -129,11 +131,13 @@ export default {
             deployment.metadata.name
         )
         .then(response => {
+          this.$emit("popup", "warning", "Deployment Deleted");
           console.log(response.data);
           this.loadPods();
         })
         .catch(error => {
           console.log("Failed to delete selected Deployment:");
+          this.$emit("popup", "error", "Deployment Failed to Delete");
           console.log(error);
         });
     },
@@ -164,9 +168,11 @@ export default {
         .then(response => {
           console.log(response);
           this.close();
+          this.$emit("popup", "success", "Deployment Edited");
           this.$store.commit("changeTab", "listDeployments"); //toast
         })
         .catch(error => {
+          this.$emit("popup", "error", "Deployment Failed to Edit");
           console.log("Failed to update Deployment");
           console.log(error);
         });

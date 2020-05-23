@@ -146,6 +146,7 @@ export default {
       this.$store.commit("changeTab", tab);
     },
     logout: function() {
+      this.$emit("popup", "warning", "Logout Successful");
       this.$store.commit("clearTab");
       this.$store.commit("clearToken");
     }

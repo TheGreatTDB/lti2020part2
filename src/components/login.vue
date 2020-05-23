@@ -45,26 +45,18 @@ export default {
     return {
       token: "",
       file: null,
-      textFile: null,
-      Options: {
-        position: "top-right",
-        duration: 5000,
-        action: {
-          text: "Clear",
-          onClick: (e, toastObject) => {
-            toastObject.goAway(0);
-          }
-        }
-      }
+      textFile: null
     };
   },
   methods: {
     login: function() {
-      if (this.chosenFile) {
+      if (this.file) {
+        console.log("login")
         this.loginFile();
       } else if (this.token != "") {
         this.loginToken();
       }
+      this.$emit("popup", "error", "Pls Paste a token or upload a Token File");
     },
     loginToken() {
       var axiosLogin = this.axios.create({
@@ -77,12 +69,12 @@ export default {
         .get("/api")
         .then(response => {
           console.log(response);
-          this.$toasted.success("Logged in", this.Options);
+          this.$emit("popup", "success", "Login Successful");
           this.$store.commit("setToken", this.token);
         })
         .catch(error => {
           console.log("Error Login with Text");
-          this.$toasted.error("Error" + error, this.Options);
+          this.$emit("popup", "error", "Invalid Token");
           console.log(error);
         });
     },
@@ -102,10 +94,12 @@ export default {
           .get("/api")
           .then(response => {
             console.log(response);
+            this.$emit("popup", "success", "Login Successful");
             this.$store.commit("setToken", this.textFile);
           })
           .catch(error => {
             console.log("Error Login with File");
+            this.$emit("popup", "error", "Invalid Token File");
             console.log(error);
           });
       };
