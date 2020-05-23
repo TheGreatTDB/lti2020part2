@@ -74,6 +74,7 @@ export default {
       numberReplicas: "",
       search: "",
       dialog: "",
+      canPopup: true,
       headers: [
         {
           text: "Name",
@@ -108,7 +109,10 @@ export default {
         .get("/apis/apps/v1/deployments")
         .then(response => {
           this.deployments = response.data.items;
-          this.$emit("popup", "info", "Deployments loaded");
+          if(this.canPopup == true){
+            this.$emit("popup", "info", "Deployments loaded");
+          }
+          this.canPopup = false;
           console.log(this.deployments);
         })
         .catch(error => {
@@ -117,7 +121,7 @@ export default {
           console.log(error);
         });
     },
-    deleteDeployment: function(deployment) {
+    deleteDeployment: function(selectedDeployment) {
       var axiosDeleteDeployment = this.axios.create({
         headers: {
           Authorization: "Bearer " + this.$store.state.token
@@ -126,13 +130,20 @@ export default {
       axiosDeleteDeployment
         .delete(
           "/apis/apps/v1/namespaces/" +
-            deployment.metadata.namespace +
+            selectedDeployment.metadata.namespace +
             "/deployments/" +
-            deployment.metadata.name
+            selectedDeployment.metadata.name
         )
         .then(response => {
           this.$emit("popup", "warning", "Deployment Deleted");
           console.log(response.data);
+          var index = 0;
+          this.deployments.forEach(deployment => {
+            if(deployment.metadata.name == selectedDeployment.metadata.name){
+              this.deployments.splice(index, 1);
+            }
+            index++;
+          })
         })
         .catch(error => {
           console.log("Failed to delete selected Deployment:");
@@ -168,8 +179,8 @@ export default {
           console.log(response);
           this.close();
           this.$emit("popup", "success", "Deployment Edited");
-          var index = this.deployments.findIndex(this.selectedDeployment)
-          console.log(index)
+          setTimeout(() => {  this.loadDeployment(); }, 1000);
+          
         })
         .catch(error => {
           this.$emit("popup", "error", "Deployment Failed to Edit");

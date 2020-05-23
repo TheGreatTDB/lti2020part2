@@ -24,7 +24,7 @@
    
     <v-bottom-sheet v-model="showData">
       <v-sheet class="text-center" height="200px">
-        <v-btn class="mt-6" flat color="error" @click="showData = !showData">Close</v-btn>
+        <v-btn class="mt-6" color="error" @click="showData = !showData">Close</v-btn>
         <div class="py-3">{{ selectedData }}</div>
       </v-sheet>
     </v-bottom-sheet>

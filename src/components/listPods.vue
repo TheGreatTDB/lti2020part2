@@ -96,8 +96,15 @@ export default {
         )
         .then(response => {
           console.log(response.data);
-          this.pods.delete(selectedPod);
           this.$emit("popup", "warning", "Pod Deleted");
+
+          var index = 0;
+          this.pods.forEach(pod => {
+            if(pod.metadata.name == selectedPod.metadata.name){
+              this.pods.splice(index, 1);
+            }
+            index++;
+          })
         })
         .catch(error => {
           console.log("Failed to delete selected Pod:");

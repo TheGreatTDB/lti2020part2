@@ -93,8 +93,15 @@ export default {
         .delete("/api/v1/namespaces/" + selectedNamespace.metadata.name)
         .then(response => {
           console.log(response.data);
-          this.namespaces.delete(selectedNamespace);
           this.$emit("popup", "warning", "Namespace Deleted");
+
+          var index = 0;
+          this.namespaces.forEach(namespace => {
+            if(namespace.metadata.name == selectedNamespace.metadata.name){
+              this.namespaces.splice(index, 1);
+            }
+            index++;
+          })
         })
         .catch(error => {
           this.$emit("popup", "error", "Failed to Delete Namespace");
