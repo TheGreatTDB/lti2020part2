@@ -1,8 +1,27 @@
 <template>
   <div>
-    <table class="table table-striped">
+    <v-card>
+      <v-card-title>
+        Services
+        <v-spacer></v-spacer>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
+        ></v-text-field>
+      </v-card-title>
+      <v-data-table :headers="headers" :items="services" :search="search" class="elevation-1">
+        <template v-slot:item.ports="{ item }">
+          <div>{{item.spec.ports[0].port}}/{{item.spec.ports[0].protocol}}</div>
+        </template>
+      </v-data-table>
+    </v-card>
+
+    <!-- <table class="table table-striped">
       <tr>
-        <th>Services: </th>
+        <th>Services:</th>
       </tr>
     </table>
     <table class="table table-striped">
@@ -34,7 +53,7 @@
           <td>{{ service.spec.clusterIP }}</td>
         </tr>
       </tbody>
-    </table>
+    </table> -->
   </div>
 </template>
 <script>
@@ -42,15 +61,29 @@ export default {
   props: [],
   data: function() {
     return {
-      services: null
-
+      services: [],
+      search: "",
+      dialog: "",
+      headers: [
+        {
+          text: "Name",
+          align: "start",
+          sortable: true,
+          value: "metadata.name"
+        },
+        { text: "Namespace", value: "metadata.namespace" },
+        { text: "Type", value: "spec.type" },
+        { text: "Cluster-IP", value: "spec.clusterIP" },
+        { text: "Ports", value: "ports" },
+        { text: "Age", value: "metadata.creationTimestamp" }
+      ]
     };
   },
   methods: {
     loadServices: function() {
       var axiosServices = this.axios.create({
         headers: {
-         "Authorization": 'Bearer ' + this.$store.state.token
+          Authorization: "Bearer " + this.$store.state.token
         }
       });
 
@@ -58,7 +91,7 @@ export default {
         .get("/api/v1/services")
         .then(response => {
           this.services = response.data.items;
-          console.log(this.services)
+          console.log(this.services);
         })
         .catch(error => {
           console.log("Failed to load Pods:");
