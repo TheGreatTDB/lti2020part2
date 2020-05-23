@@ -16,50 +16,16 @@
         <template v-slot:item.data="{ item }">
           <div>{{ Object.keys(item.data).length}}</div>
         </template>
+        <template v-slot:item.actions="{ item }">
+          <v-icon @click="openPopup(item.data)">mdi-eye</v-icon>
+        </template>
       </v-data-table>
     </v-card>
-    <table class="table table-striped">
-      <tr>
-        <th>Pods: </th>
-      </tr>
-    </table>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>NameSpace</th>
-          <th>Account Name</th>
-          <th>Resource Version</th>
-          <th>Age</th>
-          <th>Type</th>
-          <th>Data</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="secret in secrets" :key="secret.metadata.name">
-          <td>{{ secret.metadata.name }}</td>
-          <td>{{ secret.metadata.namespace }}</td>
-          <td v-if="secret.metadata.annotations != undefined">{{ secret.metadata.annotations['kubernetes.io/service-account.name'] }}</td>
-          <td v-else> ----- </td>
-          <td>{{ secret.metadata.resourceVersion }}</td>
-          <td>{{ secret.metadata.creationTimestamp }}</td>
-          <td>{{ secret.type }}</td>
-          <td><button class="btn btn-primary" v-on:click.prevent="openPopup(secret.data)">See Data</button></td>
-        </tr>
-      </tbody>
-    </table>
+   
     <v-bottom-sheet v-model="showData">
       <v-sheet class="text-center" height="200px">
-        <v-btn
-          class="mt-6"
-          flat
-          color="error"
-          @click="showData = !showData">
-          Close
-        </v-btn>
-        <div class="py-3">
-          {{ selectedData }}
-        </div>
+        <v-btn class="mt-6" flat color="error" @click="showData = !showData">Close</v-btn>
+        <div class="py-3">{{ selectedData }}</div>
       </v-sheet>
     </v-bottom-sheet>
   </div>
@@ -84,7 +50,8 @@ export default {
         { text: "Namespace", value: "metadata.namespace" },
         { text: "Type", value: "type" },
         { text: "Data", value: "data" },
-        { text: "Age", value: "metadata.creationTimestamp" }
+        { text: "Age", value: "metadata.creationTimestamp" },
+        { text: "Actions", value: "actions" }
       ]
     };
   },
@@ -101,7 +68,7 @@ export default {
         .then(response => {
           this.secrets = response.data.items;
           this.$emit("popup", "info", "Secrets Loaded");
-          console.log(this.secrets)
+          console.log(this.secrets);
         })
         .catch(error => {
           console.log("Failed to load Secrets:");
@@ -110,7 +77,7 @@ export default {
         });
     },
     openPopup: function(data) {
-      this.showData = true
+      this.showData = true;
       this.selectedData = data;
 
       const panelHandle = this.$showPanel({
@@ -135,5 +102,5 @@ export default {
 };
 </script>
 <style>
-  @import "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css";
+@import "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css";
 </style>
