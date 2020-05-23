@@ -27,6 +27,26 @@
                   v-on="on"
                 >Create Deployment</v-btn>
               </template>
+              <v-card>
+                <v-card-title>
+                  <span class="headline">Edit Replicas</span>
+                </v-card-title>
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col cols="12">
+                        <v-text-field v-model="numberReplicas" label="Desired number of replicas"></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
+
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="blue darken-1" text @click="close()">Cancel</v-btn>
+                  <v-btn color="blue darken-1" text @click="save()">Save</v-btn>
+                </v-card-actions>
+              </v-card>
             </v-dialog>
           </v-toolbar>
         </template>
@@ -37,6 +57,7 @@
           <div>{{item.metadata.labels }}</div>
         </template>
         <template v-slot:item.actions="{ item }">
+          <v-icon @click="openDialog(item)">mdi-pencil</v-icon>
           <v-icon @click="deleteDeployment(item)">mdi-delete</v-icon>
         </template>
       </v-data-table>
@@ -49,6 +70,8 @@ export default {
   data: function() {
     return {
       deployments: [],
+      selectedDeployment: {},
+      numberReplicas: "",
       search: "",
       dialog: "",
       headers: [
@@ -113,6 +136,54 @@ export default {
           console.log("Failed to delete selected Deployment:");
           console.log(error);
         });
+    },
+    editReplicas() {
+      console.log(this.numberReplicas);
+
+      var axiosUpdateReplicas = this.axios.create({
+        headers: {
+          Authorization: "Bearer " + this.$store.state.token,
+          "Content-Type": "application/strategic-merge-patch+json"
+        }
+      });
+
+      axiosUpdateReplicas
+        .patch(
+          "/apis/apps/v1/namespaces/" +
+            this.selectedDeployment.metadata.namespace +
+            "/deployments/" +
+            this.selectedDeployment.metadata.name,
+          {
+            apiVersion: "apps/v1",
+            kind: "Deployment",
+            "spec": {
+              "replicas": Number(this.numberReplicas)
+            }
+          }
+        )
+        .then(response => {
+          console.log(response);
+          this.close();
+          this.$store.commit("changeTab", "listDeployments"); //toast
+        })
+        .catch(error => {
+          console.log("Failed to update Deployment");
+          console.log(error);
+        });
+    },
+
+    openDialog(item) {
+      this.dialog = true;
+      this.selectedDeployment = item;
+    },
+
+    close() {
+      this.dialog = false;
+    },
+
+    save() {
+      this.editReplicas();
+      this.close();
     }
   },
   created() {
