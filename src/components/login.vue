@@ -15,17 +15,21 @@
                     label="Token"
                     :token="token"
                     v-model="token"
-                    @input="$emit('input', $event.target.value)"
                     @keyup.enter="loginToken()"
                     name="Token"
                     type="password"
                     prepend-icon="mdi-lock"
                   ></v-text-field>
                 </v-form>
+                <v-file-input
+                  accept=".txt"
+                  label="Click here to select a .txt token file" 
+                  v-model="file">
+                </v-file-input>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" @click="loginToken()">Login</v-btn>
+                <v-btn color="primary" @click="login()">Login</v-btn>
               </v-card-actions>
             </v-card>
           </v-col>
@@ -49,16 +53,17 @@ export default {
   data: function() {
     return {
       token: "",
-      file: null
+      file: null,
+      textFile: null
     };
   },
   methods: {
-    loadTextFromFile(ev) {
-      const txtFile = ev.target.files[0];
-      this.file = new FileReader();
-
-      this.file.onload = e => this.$emit("load", e.target.result);
-      this.file.readAsText(txtFile);
+    login: function() {
+      if (this.chosenFile) {
+        this.loginFile();
+      }else if(this.token != ""){
+        this.loginToken();
+      }
     },
     loginToken() {
       var axiosLogin = this.axios.create({
@@ -79,22 +84,28 @@ export default {
         });
     },
     loginFile() {
-      var axiosLogin = this.axios.create({
-        headers: {
-          Authorization: "Bearer " + this.file.result
-        }
-      });
+      var reader = new FileReader();
+      reader.readAsText(this.file);
+      reader.onload = () => {
+        this.textFile = reader.result
 
-      axiosLogin
+        var axiosLogin = this.axios.create({
+          headers: {
+            Authorization: "Bearer " + this.textFile
+          }
+        });
+
+        axiosLogin
         .get("/api")
         .then(response => {
           console.log(response);
-          this.$store.commit("setToken", this.file.result);
+          this.$store.commit("setToken", this.textFile);
         })
         .catch(error => {
           console.log("Error Login with File");
           console.log(error);
         });
+      }
     }
   },
   created() {}
