@@ -15,17 +15,17 @@
                     label="Token"
                     :token="token"
                     v-model="token"
-                    @keyup.enter="loginToken()"
                     name="Token"
                     type="password"
                     prepend-icon="mdi-lock"
+                    @keydown.native.enter="loginToken()"
                   ></v-text-field>
                 </v-form>
                 <v-file-input
                   accept=".txt"
-                  label="Click here to select a .txt token file" 
-                  v-model="file">
-                </v-file-input>
+                  label="Click here to select a .txt token file"
+                  v-model="file"
+                ></v-file-input>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -37,15 +37,6 @@
       </v-container>
     </v-content>
   </v-app>
-
-  <!-- <div class="inputField">
-      <label class="text-reader">
-        Or File:
-        <input type="file" @change="loadTextFromFile" />
-      </label>
-      <button type="submit" class="btn btn-primary" @click="loginFile()">Login</button>
-      <br />
-  </div>-->
 </template>
 <script>
 export default {
@@ -54,14 +45,24 @@ export default {
     return {
       token: "",
       file: null,
-      textFile: null
+      textFile: null,
+      Options: {
+        position: "top-right",
+        duration: 5000,
+        action: {
+          text: "Clear",
+          onClick: (e, toastObject) => {
+            toastObject.goAway(0);
+          }
+        }
+      }
     };
   },
   methods: {
     login: function() {
       if (this.chosenFile) {
         this.loginFile();
-      }else if(this.token != ""){
+      } else if (this.token != "") {
         this.loginToken();
       }
     },
@@ -76,10 +77,12 @@ export default {
         .get("/api")
         .then(response => {
           console.log(response);
+          this.$toasted.success("Logged in", this.Options);
           this.$store.commit("setToken", this.token);
         })
         .catch(error => {
           console.log("Error Login with Text");
+          this.$toasted.error("Error" + error, this.Options);
           console.log(error);
         });
     },
@@ -87,7 +90,7 @@ export default {
       var reader = new FileReader();
       reader.readAsText(this.file);
       reader.onload = () => {
-        this.textFile = reader.result
+        this.textFile = reader.result;
 
         var axiosLogin = this.axios.create({
           headers: {
@@ -96,16 +99,16 @@ export default {
         });
 
         axiosLogin
-        .get("/api")
-        .then(response => {
-          console.log(response);
-          this.$store.commit("setToken", this.textFile);
-        })
-        .catch(error => {
-          console.log("Error Login with File");
-          console.log(error);
-        });
-      }
+          .get("/api")
+          .then(response => {
+            console.log(response);
+            this.$store.commit("setToken", this.textFile);
+          })
+          .catch(error => {
+            console.log("Error Login with File");
+            console.log(error);
+          });
+      };
     }
   },
   created() {}

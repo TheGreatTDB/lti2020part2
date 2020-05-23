@@ -11,8 +11,10 @@ import Button from 'primevue/button';
 import PanelMenu from 'primevue/panelmenu';
 import Menubar from 'primevue/menubar';
 
+//Toast
+import Toasted from 'vue-toasted';
 
-
+//Axios etc
 import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
@@ -23,7 +25,7 @@ import VueAxios from "vue-axios";
 import store from "./store/auth";
 import vuetify from './plugins/vuetify';
 
-axios.defaults.baseURL = "http://192.168.199.150:8443"; //"http://devstack.local"; //Mudar para ip do servidor do openstack! ex: "http://192.168.x.x"
+axios.defaults.baseURL = "http://192.168.199.150:8443"; 
 
 Vue.use(BootstrapVue, IconsPlugin);
 Vue.use(VueAxios, axios);
@@ -36,7 +38,8 @@ Vue.component('Button', Button);
 Vue.component('PanelMenu', PanelMenu);
 Vue.component('Menubar', Menubar);
 
-
+//Toast
+Vue.use(Toasted);
 
 new Vue({
   store,
