@@ -68,7 +68,7 @@ export default {
         { text: "Memory Capacity", value: "status.capacity.memory" },
         { text: "Allocatable Memory", value: "status.allocatable.memory" },
         { text: "Pods Capacity", value: "status.capacity.pods" },
-        { text: "Allocatable Pods image", value: "status.allocatable.pods" }
+        { text: "Allocatable Pods", value: "status.allocatable.pods" }
       ]
     };
   },
