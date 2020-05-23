@@ -71,10 +71,12 @@ export default {
         .get("/api/v1/pods")
         .then(response => {
           this.pods = response.data.items;
+          this.$emit("popup", "info", "Pods Loaded");
           console.log(this.pods);
         })
         .catch(error => {
           console.log("Failed to load Pods:");
+          this.$emit("popup", "error", "Failed to Load Nodes");
           console.log(error);
         });
     },
@@ -94,10 +96,12 @@ export default {
         )
         .then(response => {
           console.log(response.data);
-          this.loadPods();
+          this.pods.delete(selectedPod);
+          this.$emit("popup", "warning", "Pod Deleted");
         })
         .catch(error => {
           console.log("Failed to delete selected Pod:");
+          this.$emit("popup", "error", "Failed to Delete Pod");
           console.log(error);
         });
     }

@@ -108,9 +108,11 @@ export default {
         )
         .then(response => {
           console.log(response);
+          this.$emit("popup", "success", "Deployment Created");
           this.$store.commit("changeTab", "listDeployments");
         })
         .catch(error => {
+          this.$emit("popup", "error", "Deployment Creation Failed");
           console.log("Failed to create Deployment");
           console.log(error);
         });
@@ -130,6 +132,7 @@ export default {
         })
         .catch(error => {
           console.log("Failed to load Namespaces:");
+          this.$emit("popup", "error", "Failed to load Namespace Options");
           console.log(error);
         });
     }

@@ -70,10 +70,12 @@ export default {
         .get("/api/v1/namespaces")
         .then(response => {
           this.namespaces = response.data.items;
+          this.$emit("popup", "info", "Namespaces Loaded");
           console.log(this.namespaces);
         })
         .catch(error => {
           console.log("Failed to load Namespaces:");
+          this.$emit("popup", "error", "Failed to Load Namespaces");
           console.log(error);
         });
     },
@@ -92,8 +94,10 @@ export default {
         .then(response => {
           console.log(response.data);
           this.namespaces.delete(selectedNamespace);
+          this.$emit("popup", "warning", "Namespace Deleted");
         })
         .catch(error => {
+          this.$emit("popup", "error", "Failed to Delete Namespace");
           console.log("Failed to delete selected Namespace");
           console.log(error);
         });

@@ -81,20 +81,22 @@ export default {
   },
   methods: {
     loadNodes: function() {
-      var axiosPods = this.axios.create({
+      var axiosNodes = this.axios.create({
         headers: {
           Authorization: "Bearer " + this.$store.state.token
         }
       });
 
-      axiosPods
+      axiosNodes
         .get("/api/v1/nodes")
         .then(response => {
           this.nodes = response.data.items;
+          this.$emit("popup", "info", "Nodes Loaded");
           console.log(this.nodes);
         })
         .catch(error => {
           console.log("Failed to load Nodes");
+          this.$emit("popup", "error", "Failed to Load Nodes");
           console.log(error);
         });
     },

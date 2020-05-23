@@ -1,36 +1,49 @@
 <template>
   <div class="hello">
-    <login v-if="this.$store.state.token == null" />
+    <v-snackbar
+      v-model="showPopup"
+      :right="true"
+      :top="true"
+      :color="popupState"
+      :timeout="timeout">
+      {{ popupText }}
+      <v-btn
+        dark
+        text
+        @click="showPopup = false"> Close </v-btn>
+    </v-snackbar>
+
+    <login v-if="this.$store.state.token == null" @popup="popup"/>
     <div v-if="this.$store.state.token != null">
-      <menuNav />
-      <listNamespaces
+      <menuNav @popup="popup"/>
+      <listNamespaces @popup="popup"
         v-if="this.$store.state.currentTab == 'listNamespaces' && this.$store.state.token != null"
       />
-      <createNamespace
+      <createNamespace @popup="popup"
         v-if="this.$store.state.currentTab == 'createNamespace' && this.$store.state.token != null"
       />
-      <listNodes
+      <listNodes @popup="popup"
         v-if="this.$store.state.currentTab == 'listNodes' && this.$store.state.token != null"
       />
-      <listPods
+      <listPods @popup="popup"
         v-if="this.$store.state.currentTab == 'listPods' && this.$store.state.token != null"
       />
-      <createPod
+      <createPod @popup="popup"
         v-if="this.$store.state.currentTab == 'createPod' && this.$store.state.token != null"
       />
-      <listSecrets
+      <listSecrets @popup="popup"
         v-if="this.$store.state.currentTab == 'listSecrets' && this.$store.state.token != null"
       />
-      <listServices
+      <listServices @popup="popup"
         v-if="this.$store.state.currentTab == 'listServices' && this.$store.state.token != null"
       />
-      <statusEndpoints
+      <statusEndpoints @popup="popup"
         v-if="this.$store.state.currentTab == 'statusEndpoints' && this.$store.state.token != null"
       />
-      <createDeployment
+      <createDeployment @popup="popup"
         v-if="this.$store.state.currentTab == 'createDeployment' && this.$store.state.token != null"
       />
-      <listDeployments
+      <listDeployments @popup="popup"
         v-if="this.$store.state.currentTab == 'listDeployments' && this.$store.state.token != null"
       />
     </div>
@@ -55,6 +68,22 @@ export default {
   name: "HelloWorld",
   props: {
     msg: String
+  },
+  data: function(){
+    return {
+      showPopup: false,
+      popupState: "",
+      popupText: "",
+      timeout: 2000
+    };
+  },
+  methods:{
+    popup: function(state, message){
+      this.showPopup = false;
+      this.popupState = state;
+      this.popupText = message;
+      this.showPopup = true;
+    }
   },
   components: {
     login: LoginComponent,

@@ -85,9 +85,11 @@ export default {
         )
         .then(response => {
           console.log(response);
+          this.$emit("popup", "success", "Pod Created");
           this.$store.commit("changeTab", "listPods");
         })
         .catch(error => {
+          this.$emit("popup", "error", "Pod Creation Failed");
           console.log("Failed to create Namespace");
           console.log(error);
         });
@@ -107,6 +109,7 @@ export default {
         })
         .catch(error => {
           console.log("Failed to load Namespaces");
+          this.$emit("popup", "error", "Failed to load Namespace Options");
           console.log(error);
         });
     }

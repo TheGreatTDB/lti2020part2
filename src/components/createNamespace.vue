@@ -42,9 +42,11 @@ export default {
         })
         .then(response => {
           console.log(response);
+          this.$emit("popup", "success", "Namespace Created");
           this.$store.commit("changeTab", "listNamespaces");
         })
         .catch(error => {
+          this.$emit("popup", "error", "Namespace Creation Failed");
           console.log("Failed to create Namespace");
           console.log(error);
         });
