@@ -91,6 +91,28 @@ export default {
           console.log("Failed to load Deployment:");
           console.log(error);
         });
+    },
+    deleteDeployment: function(deployment) {
+      var axiosDeleteDeployment = this.axios.create({
+        headers: {
+          Authorization: "Bearer " + this.$store.state.token
+        }
+      });
+      axiosDeleteDeployment
+        .delete(
+          "/apis/apps/v1/namespaces/" +
+            deployment.metadata.namespace +
+            "/deployments/" +
+            deployment.metadata.name
+        )
+        .then(response => {
+          console.log(response.data);
+          this.loadPods();
+        })
+        .catch(error => {
+          console.log("Failed to delete selected Deployment:");
+          console.log(error);
+        });
     }
   },
   created() {
