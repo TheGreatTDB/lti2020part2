@@ -74,8 +74,8 @@ export default {
                   ports: [{ containerPort: 80 }],
                   resources: {
                     limits: {
-                      memory: this.podMemory,
-                      cpu: this.podCPU
+                      memory: this.podMemory + "Mi",
+                      cpu: this.podCPU + "m"
                     }
                   }
                 }

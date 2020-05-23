@@ -133,7 +133,6 @@ export default {
         .then(response => {
           this.$emit("popup", "warning", "Deployment Deleted");
           console.log(response.data);
-          this.loadPods();
         })
         .catch(error => {
           console.log("Failed to delete selected Deployment:");
@@ -169,7 +168,8 @@ export default {
           console.log(response);
           this.close();
           this.$emit("popup", "success", "Deployment Edited");
-          this.$store.commit("changeTab", "listDeployments"); //toast
+          var index = this.deployments.findIndex(this.selectedDeployment)
+          console.log(index)
         })
         .catch(error => {
           this.$emit("popup", "error", "Deployment Failed to Edit");

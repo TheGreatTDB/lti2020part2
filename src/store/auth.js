@@ -8,7 +8,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     token: sessionStorage.getItem("token") || null,
-    currentTab: sessionStorage.getItem("tab") || "statusEndpoints"
+    currentTab: sessionStorage.getItem("tab") || "listNodes"
   },
   mutations: {
     setToken: (state, token) => {
