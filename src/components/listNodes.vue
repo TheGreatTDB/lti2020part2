@@ -21,34 +21,13 @@
         </template>
       </v-data-table>
     </v-card>
-
-    <table class="table table-striped">
-      <tr>
-        <th>Nodes:</th>
-      </tr>
-    </table>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Capacity CPUs</th>
-          <th>Allocatable CPU</th>
-          <th>Capacity Memory</th>
-          <th>Allocatable Memory</th>
-          <th>Capacity Pods</th>
-          <th>Allocatable Pods</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="node in nodes" :key="node.metadata.name">
-          <td>{{ node.status.capacity.cpu }}</td>
-          <td>{{ node.status.allocatable.cpu }}</td>
-          <td>{{ node.status.capacity.memory }}</td>
-          <td>{{ node.status.allocatable.memory }}</td>
-          <td>{{ node.status.capacity.pods }}</td>
-          <td>{{ node.status.allocatable.pods }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <v-card>
+      <v-card-title>
+        Nodes Resources
+        <v-spacer></v-spacer>
+      </v-card-title>
+      <v-data-table :headers="headers2" :items="nodes" :search="search" class="elevation-1"></v-data-table>
+    </v-card>
   </div>
 </template>
 <script>
@@ -76,9 +55,24 @@ export default {
           text: "Container Runtime",
           value: "status.nodeInfo.containerRuntimeVersion"
         }
+      ],
+      headers2: [
+        {
+          text: "Name",
+          align: "start",
+          sortable: true,
+          value: "metadata.name"
+        },
+        { text: "CPU Capacity", value: "status.capacity.cpu" },
+        { text: "Allocatable CPU", value: "status.allocatable.cpu" },
+        { text: "Memory Capacity", value: "status.capacity.memory" },
+        { text: "Allocatable Memory", value: "status.allocatable.memory" },
+        { text: "Pods Capacity", value: "status.capacity.pods" },
+        { text: "Allocatable Pods image", value: "status.allocatable.pods" }
       ]
     };
   },
+
   methods: {
     loadNodes: function() {
       var axiosPods = this.axios.create({
