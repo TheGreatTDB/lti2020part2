@@ -1,40 +1,46 @@
 <template>
   <div>
-    <table class="table table-striped">
-      <tr>
-        <th>Deployments: </th>
-      </tr>
-    </table>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>NameSpace</th>
-          <th>Age</th>
-          <th>Generation</th>
-          <th>Replicas</th>
-          <th>Template Volume Name</th>
-          <th>Template Containers</th>
-          <th>Template Restart Policy</th>
-          <th>TemplateDNS Policy</th>
-          <th>Template Service Account Name</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="deployment in deployments" :key="deployment.metadata.name">
-          <td>{{ deployment.metadata.name }}</td>
-          <td>{{ deployment.metadata.namespace }}</td>
-          <td>{{ deployment.metadata.creationTimestamp }}</td>
-          <td>{{ deployment.metadata.generation }}</td>
-          <td>{{ deployment.spec.replicas }}</td>
-          <td>{{ deployment.spec.template.spec.volumes[0].name }}</td>
-          <td>{{ deployment.spec.template.spec.containers.length }}</td>
-          <td>{{ deployment.spec.template.spec.restartPolicy }}</td>
-          <td>{{ deployment.spec.template.spec.dnsPolicy }}</td>
-          <td>{{ deployment.spec.template.spec.serviceAccountName }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <v-card>
+      <v-card-title>
+        Deployments
+        <v-spacer></v-spacer>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
+        ></v-text-field>
+      </v-card-title>
+      <v-data-table :headers="headers" :items="deployments" :search="search" class="elevation-1">
+        <template v-slot:top>
+          <v-toolbar flat color="white">
+            <v-divider class="mx-4" inset vertical></v-divider>
+            <v-spacer></v-spacer>
+            <v-dialog v-model="dialog" max-width="500px">
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  color="primary"
+                  dark
+                  class="mb-2"
+                  @click="changetab()"
+                  v-on="on"
+                >Create Deployment</v-btn>
+              </template>
+            </v-dialog>
+          </v-toolbar>
+        </template>
+        <template v-slot:item.ready="{ item }">
+          <div>{{item.status.readyReplicas }}/{{ item.status.replicas }}</div>
+        </template>
+        <template v-slot:item.selector="{ item }">
+          <div>{{item.metadata.labels }}</div>
+        </template>
+        <template v-slot:item.actions="{ item }">
+          <v-icon @click="deleteDeployment(item)">mdi-delete</v-icon>
+        </template>
+      </v-data-table>
+    </v-card>
   </div>
 </template>
 <script>
@@ -42,15 +48,33 @@ export default {
   props: [],
   data: function() {
     return {
-      deployments: null
-
+      deployments: [],
+      search: "",
+      dialog: "",
+      headers: [
+        {
+          text: "Name",
+          align: "start",
+          sortable: true,
+          value: "metadata.name"
+        },
+        { text: "Namespace", value: "metadata.namespace" },
+        { text: "Ready", value: "ready" },
+        { text: "Age", value: "metadata.creationTimestamp" },
+        { text: "Up-To-Date", value: "status.updatedReplicas" },
+        { text: "Available", value: "status.availableReplicas" },
+        { text: "Containers", value: "spec.template.spec.containers[0].name" },
+        { text: "Images", value: "spec.template.spec.containers[0].image" },
+        { text: "Selector", value: "selector" },
+        { text: "Actions", value: "actions", sortable: false }
+      ]
     };
   },
   methods: {
     loadDeployment: function() {
       var axiosServices = this.axios.create({
         headers: {
-         "Authorization": 'Bearer ' + this.$store.state.token
+          Authorization: "Bearer " + this.$store.state.token
         }
       });
 
@@ -58,7 +82,7 @@ export default {
         .get("/apis/apps/v1/deployments")
         .then(response => {
           this.deployments = response.data.items;
-          console.log(this.deployments)
+          console.log(this.deployments);
         })
         .catch(error => {
           console.log("Failed to load Deployment:");

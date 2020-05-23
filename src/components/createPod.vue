@@ -88,7 +88,7 @@ export default {
           this.$store.commit("changeTab", "listPods");
         })
         .catch(error => {
-          console.log("Failed to create Volume");
+          console.log("Failed to create Namespace");
           console.log(error);
         });
     },
@@ -106,7 +106,7 @@ export default {
           console.log(this.namespaces);
         })
         .catch(error => {
-          console.log("Failed to load Namespaces:");
+          console.log("Failed to load Namespaces");
           console.log(error);
         });
     }
