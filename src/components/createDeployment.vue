@@ -1,45 +1,46 @@
 <template>
   <div>
-    <p>Deployment Name:</p>
-    <b-form-input class="w-25 mx-auto" v-model="podName" placeholder="Pod Name" />
+    <v-col class="mb-4">
+      <h1 class="display-2 font-weight-bold mb-3">Deployment</h1>
 
-    <p>Select Namespace:</p>
-    <multiselect v-if="namespaces != null"
-      v-model="deploymentNamespace"
-      :options="namespaces"
-      :multiple="false"
-      label='metadata'
-      track-by='metadata'
-      placeholder="Pick 1 Namespace"
-      class="table table-striped"
-    >
-      <template slot="selection" slot-scope="{ values, search, isOpen }">
-        <span
-          class="multiselect__single"
-          v-if="values.length &amp;&amp; !isOpen"
-        >{{ values.length }} options selected</span>
-      </template>
-    </multiselect>
+      <p
+        class="subheading font-weight-regular"
+      >Create a new Deployment with a specific number of replicas</p>
+      <v-col cols="6" sm="3" md="3">
+        <v-text-field v-model="deploymentName" label="Deployment Name"></v-text-field>
+        <v-select
+          :items="namespaces"
+          v-model="deploymentNamespace"
+          item-text="metadata.name"
+          label="Namespace"
+        ></v-select>
+      </v-col>
 
-    <!--<p>Select Containers:</p>
-    <multiselect v-if="containers != null"
-      v-model="podContainers"
-      :options="containers"
-      :multiple="true"
-      label='metadata'
-      track-by='metadata'
-      placeholder="Pick 1 or More Containers"
-      class="table table-striped"
-    >
-      <template slot="selection" slot-scope="{ values, search, isOpen }">
-        <span
-          class="multiselect__single"
-          v-if="values.length &amp;&amp; !isOpen"
-        >{{ values.length }} options selected</span>
-      </template>
-    </multiselect>-->
-    
-    <b-button variant="outline-primary"  v-on:click.prevent="createPod()">Create Pod</b-button>
+      <v-col cols="6" sm="3" md="3">
+        <v-subheader class="pl-0">Number of desired replicas</v-subheader>
+        <v-slider :max="15" :min="1" v-model="deploymentReplicas" thumb-label>
+          <template v-slot:append>
+            <v-text-field
+              v-model="deploymentReplicas"
+              class="mt-0 pt-0"
+              hide-details
+              single-line
+              type="number"
+              style="width: 60px"
+              :min="1"
+            ></v-text-field>
+          </template>
+        </v-slider>
+      </v-col>
+
+      <v-col cols="6" sm="3" md="3">
+        <v-text-field v-model="deploymentImage" label="Image"></v-text-field>
+      </v-col>
+
+      <div class="my-2">
+        <v-btn depressed v-on:click.prevent="createDeployment()" color="primary">Create Deployment</v-btn>
+      </div>
+    </v-col>
   </div>
 </template>
 <script>
@@ -47,68 +48,77 @@ export default {
   data: function() {
     return {
       deploymentName: "",
-      deploymentNamespace: null,
-      namespaces: null,
+      deploymentNamespace: "",
+      deploymentImage: "",
+      deploymentReplicas: 1,
+      namespaces: []
     };
   },
   methods: {
-    createPod: function() {
+    createDeployment: function() {
+      if (this.deploymentImage == "") {
+        console.log('no image');
+      }
+
       var axiosCreatePod = this.axios.create({
         headers: {
-          "Authorization": 'Bearer ' + this.$store.state.token
+          Authorization: "Bearer " + this.$store.state.token
         }
       });
 
       axiosCreatePod
-        .post("/apis/apps/v1/namespaces/" + this.deploymentNamespace.metadata.name + "/deployments", 
+        .post(
+          "/apis/apps/v1/namespaces/" +
+            this.deploymentNamespace+
+            "/deployments",
           {
-            "apiVersion":"apps/v1",
-            "kind":"Deployment",
-            "metadata":{
-              "name": this.deploymentName,
-              "labels":{
-                "app":"nginx"
+            apiVersion: "apps/v1",
+            kind: "Deployment",
+            metadata: {
+              name: this.deploymentName,
+              labels: {
+                app: this.deploymentImage
               }
             },
-            "spec": {
-              "replicas" : 3,
-              "selector": {
-                "matchLabels" : {
-                  "app":"nginx"
+            spec: {
+              replicas: this.deploymentReplicas,
+              selector: {
+                matchLabels: {
+                  app: this.deploymentImage
                 }
               },
-              "template" : {
-                "metadata" : {
-                  "labels" : {
-                    "app":"nginx"
+              template: {
+                metadata: {
+                  labels: {
+                    app: this.deploymentImage
                   }
                 },
-                "spec":{
-                    "containers":[{
-                      "name":"ngnix",
-                      "image":"nginx:1.7.9",
-                      "ports":[{
-                          "containerPort": 80 
-                      }]
-                    }]
+                spec: {
+                  containers: [
+                    {
+                      name: this.deploymentImage,
+                      image: this.deploymentImage,
+                      ports: [{ containerPort: 80 }]
+                    }
+                  ]
                 }
               }
             }
-        }
+          }
         )
         .then(response => {
           console.log(response);
-          this.$store.commit("changeTab", "listPods");
+          this.$store.commit("changeTab", "listDeployments");
         })
         .catch(error => {
-          console.log("Failed to create Volume");
+          console.log("Failed to create Deployment");
           console.log(error);
         });
     },
     loadNamespaces: function() {
       var axiosNamespaces = this.axios.create({
         headers: {
-          "Authorization": 'Bearer ' + this.$store.state.token
+          Authorization: "Bearer " + this.$store.state.token
         }
       });
 
@@ -116,17 +126,16 @@ export default {
         .get("/api/v1/namespaces")
         .then(response => {
           this.namespaces = response.data.items;
-          console.log(this.namespaces)
+          console.log(this.namespaces);
         })
         .catch(error => {
           console.log("Failed to load Namespaces:");
           console.log(error);
         });
-    },
+    }
   },
-  created(){
+  created() {
     this.loadNamespaces();
   }
 };
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

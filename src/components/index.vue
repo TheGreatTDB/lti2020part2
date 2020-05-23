@@ -3,37 +3,30 @@
     <login v-if="this.$store.state.token == null" />
     <div v-if="this.$store.state.token != null">
       <menuNav />
-
       <listNamespaces
         v-if="this.$store.state.currentTab == 'listNamespaces' && this.$store.state.token != null"
       />
       <createNamespace
         v-if="this.$store.state.currentTab == 'createNamespace' && this.$store.state.token != null"
       />
-
       <listNodes
         v-if="this.$store.state.currentTab == 'listNodes' && this.$store.state.token != null"
       />
-
       <listPods
         v-if="this.$store.state.currentTab == 'listPods' && this.$store.state.token != null"
       />
       <createPod
         v-if="this.$store.state.currentTab == 'createPod' && this.$store.state.token != null"
       />
-
       <listSecrets
         v-if="this.$store.state.currentTab == 'listSecrets' && this.$store.state.token != null"
       />
-
       <listServices
         v-if="this.$store.state.currentTab == 'listServices' && this.$store.state.token != null"
       />
-
       <statusEndpoints
         v-if="this.$store.state.currentTab == 'statusEndpoints' && this.$store.state.token != null"
       />
-
       <createDeployment
         v-if="this.$store.state.currentTab == 'createDeployment' && this.$store.state.token != null"
       />
@@ -45,17 +38,17 @@
 </template>
 
 <script>
-import LoginComponent from "./login"; //Done
-import MenuNavComponent from "./menuNav";
+import LoginComponent from "./login";
+import MenuNavComponent from "./menuNav"; //Done
 import ListNamespacesComponent from "./listNamespaces"; //Done
 import CreateNamespaceComponent from "./createNamespace"; //Done
-import ListNodesComponent from "./listNodes"; //Done +/-
-import ListPodsComponent from "./listPods"; //Done +/-
-import CreatePodComponent from "./createPod"; //Done -/+
-import ListSecretsComponent from "./listSecrets"; //Done (Falta o fazer o Popup para ver o token)
+import ListNodesComponent from "./listNodes"; //Done
+import ListPodsComponent from "./listPods"; //Done
+import CreatePodComponent from "./createPod"; //Done
+import ListSecretsComponent from "./listSecrets";
 import ListServicesComponent from "./listServices"; //Done
-import StatusEndpointsComponent from "./statusEndpoints"; //Done
-import CreateDeploymentComponent from "./createDeployment"; //Not Done
+import StatusEndpointsComponent from "./statusEndpoints";
+import CreateDeploymentComponent from "./createDeployment";
 import ListDeploymentsComponent from "./listDeployments"; //Done
 
 export default {

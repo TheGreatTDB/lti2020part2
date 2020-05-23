@@ -71,6 +71,9 @@ export default {
     };
   },
   methods: {
+    changetab: function() {
+      this.$store.commit("changeTab", "createDeployment");
+    },
     loadDeployment: function() {
       var axiosServices = this.axios.create({
         headers: {
